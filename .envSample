@@ -1,0 +1,6 @@
+DB_HOST=localhost
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=apidb
+DB_PORT=54322
+JWT_SECRET_KEY=secret-key-api-pattern-go
