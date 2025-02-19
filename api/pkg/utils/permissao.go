@@ -1,11 +1,11 @@
-package service
+package utils
 
 import (
-	"cinema_digital_go/api/global/enum"
-	"cinema_digital_go/api/models"
+	"cinema_digital_go/api/internal/usuario/model"
+	"cinema_digital_go/api/pkg/global/enum"
 )
 
-func VerificaPermissaoUsuario(usuario models.UsuarioDTOResponse, permissoes ...string) bool {
+func VerificaPermissaoUsuario(usuario model.UsuarioDTOResponse, permissoes ...string) bool {
 	for _, permissao := range usuario.Permissoes {
 		if permissao.Nome == enum.PermissaoSistemaAdmin {
 			return true

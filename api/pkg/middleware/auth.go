@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"cinema_digital_go/api/global/erros"
-	"cinema_digital_go/api/security"
+	"cinema_digital_go/api/pkg/global/erros"
+	"cinema_digital_go/api/pkg/security"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

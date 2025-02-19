@@ -1,7 +1,8 @@
-package models
+package model
 
 import (
-	"cinema_digital_go/api/global"
+	"cinema_digital_go/api/internal/dropdown/model"
+	"cinema_digital_go/api/pkg/global"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -21,8 +22,8 @@ func (p *Permissao) TableName() string {
 	return global.TablePermissao
 }
 
-func (p *Permissao) PermissaoToDropdownUUID() *DropdownUUID {
-	return &DropdownUUID{
+func (p *Permissao) PermissaoToDropdownUUID() *model.DropdownUUID {
+	return &model.DropdownUUID{
 		Label: p.Nome,
 		Value: p.Id,
 	}

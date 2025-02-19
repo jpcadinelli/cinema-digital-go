@@ -1,31 +1,32 @@
-package permissao
+package resource
 
 import (
-	dbConetion "cinema_digital_go/api/database/conection"
-	"cinema_digital_go/api/global/enum"
-	"cinema_digital_go/api/global/erros"
-	"cinema_digital_go/api/middleware"
-	"cinema_digital_go/api/models"
-	"cinema_digital_go/api/repository"
-	"cinema_digital_go/api/service"
+	"cinema_digital_go/api/internal/dropdown/model"
+	models2 "cinema_digital_go/api/internal/permissao/model"
+	"cinema_digital_go/api/internal/permissao/repository"
+	dbConetion "cinema_digital_go/api/pkg/database/conection"
+	"cinema_digital_go/api/pkg/global/enum"
+	"cinema_digital_go/api/pkg/global/erros"
+	"cinema_digital_go/api/pkg/middleware"
+	service2 "cinema_digital_go/api/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
 )
 
 func Criar(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoCriar) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoCriar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
 
-	var p models.Permissao
+	var p models2.Permissao
 
 	if err = ginctx.ShouldBindJSON(&p); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
@@ -41,13 +42,13 @@ func Criar(ginctx *gin.Context) {
 }
 
 func Visualizar(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoVisualizar) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoVisualizar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
@@ -69,13 +70,13 @@ func Visualizar(ginctx *gin.Context) {
 }
 
 func Listar(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoListar) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoListar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
@@ -90,13 +91,13 @@ func Listar(ginctx *gin.Context) {
 }
 
 func Dropdown(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoDropdown) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoDropdown) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
@@ -107,7 +108,7 @@ func Dropdown(ginctx *gin.Context) {
 		return
 	}
 
-	var response []*models.DropdownUUID
+	var response []*model.DropdownUUID
 	for _, p := range permissoes {
 		response = append(response, p.PermissaoToDropdownUUID())
 	}
@@ -116,18 +117,18 @@ func Dropdown(ginctx *gin.Context) {
 }
 
 func Atualizar(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoAtualizar) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoAtualizar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
 
-	var p models.Permissao
+	var p models2.Permissao
 
 	if err = ginctx.ShouldBindJSON(&p); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
@@ -155,13 +156,13 @@ func Atualizar(ginctx *gin.Context) {
 }
 
 func Deletar(ginctx *gin.Context) {
-	usuarioLogado, err := service.GetUsuarioLogado(ginctx)
+	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoDeletar) {
+	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoPermissaoDeletar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}

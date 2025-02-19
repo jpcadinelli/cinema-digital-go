@@ -1,11 +1,11 @@
-package service
+package utils
 
 import (
-	dbConetion "cinema_digital_go/api/database/conection"
-	"cinema_digital_go/api/global/erros"
-	"cinema_digital_go/api/models"
-	"cinema_digital_go/api/repository"
-	"cinema_digital_go/api/security"
+	"cinema_digital_go/api/internal/usuario/model"
+	"cinema_digital_go/api/internal/usuario/repository"
+	dbConetion "cinema_digital_go/api/pkg/database/conection"
+	"cinema_digital_go/api/pkg/global/erros"
+	"cinema_digital_go/api/pkg/security"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -34,7 +34,7 @@ func GetIdUsuarioLogado(ginctx *gin.Context) (uuid.UUID, error) {
 	return id, nil
 }
 
-func GetUsuarioLogado(ginctx *gin.Context) (*models.UsuarioDTOResponse, error) {
+func GetUsuarioLogado(ginctx *gin.Context) (*model.UsuarioDTOResponse, error) {
 	header := ginctx.Request.Header.Get("Authorization")
 	if header == "" {
 		return nil, erros.ErrTokenInexistente

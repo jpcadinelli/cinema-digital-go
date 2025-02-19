@@ -1,18 +1,19 @@
 package repository
 
 import (
-	"cinema_digital_go/api/global/erros"
-	"cinema_digital_go/api/models"
+	"cinema_digital_go/api/internal/permissao/model"
+	models2 "cinema_digital_go/api/internal/usuario/model"
+	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type UsuarioRepository interface {
-	FindById(id uuid.UUID, preloads ...string) (*models.Usuario, error)
-	FindByEmail(email string) (*models.Usuario, error)
-	FindAll(preloads ...string) ([]models.Usuario, error)
-	Create(usuario *models.Usuario) error
-	Update(usuario *models.Usuario, updateItems map[string]interface{}) (*models.Usuario, error)
+	FindById(id uuid.UUID, preloads ...string) (*models2.Usuario, error)
+	FindByEmail(email string) (*models2.Usuario, error)
+	FindAll(preloads ...string) ([]models2.Usuario, error)
+	Create(usuario *models2.Usuario) error
+	Update(usuario *models2.Usuario, updateItems map[string]interface{}) (*models2.Usuario, error)
 	Delete(id uuid.UUID) error
 }
 
@@ -24,8 +25,8 @@ func NewUsuarioRepository(db *gorm.DB) UsuarioRepository {
 	return &usuarioRepositoryImpl{db: db}
 }
 
-func (r *usuarioRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*models.Usuario, error) {
-	var usuario models.Usuario
+func (r *usuarioRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*models2.Usuario, error) {
+	var usuario models2.Usuario
 
 	tx := r.db
 	if len(preloads) > 0 {
@@ -45,8 +46,8 @@ func (r *usuarioRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*mod
 	return &usuario, nil
 }
 
-func (r *usuarioRepositoryImpl) FindByEmail(email string) (*models.Usuario, error) {
-	var usuario models.Usuario
+func (r *usuarioRepositoryImpl) FindByEmail(email string) (*models2.Usuario, error) {
+	var usuario models2.Usuario
 
 	tx := r.db.First(&usuario, "email = ?", email)
 	if tx.Error != nil {
@@ -59,8 +60,8 @@ func (r *usuarioRepositoryImpl) FindByEmail(email string) (*models.Usuario, erro
 	return &usuario, nil
 }
 
-func (r *usuarioRepositoryImpl) FindAll(preloads ...string) ([]models.Usuario, error) {
-	var usuarios []models.Usuario
+func (r *usuarioRepositoryImpl) FindAll(preloads ...string) ([]models2.Usuario, error) {
+	var usuarios []models2.Usuario
 
 	tx := r.db
 	if len(preloads) > 0 {
@@ -80,11 +81,11 @@ func (r *usuarioRepositoryImpl) FindAll(preloads ...string) ([]models.Usuario, e
 	return usuarios, nil
 }
 
-func (r *usuarioRepositoryImpl) Create(usuario *models.Usuario) error {
+func (r *usuarioRepositoryImpl) Create(usuario *models2.Usuario) error {
 	return r.db.Create(usuario).Error
 }
 
-func (r *usuarioRepositoryImpl) Update(usuario *models.Usuario, updateItems map[string]interface{}) (*models.Usuario, error) {
+func (r *usuarioRepositoryImpl) Update(usuario *models2.Usuario, updateItems map[string]interface{}) (*models2.Usuario, error) {
 	tx := r.db.Model(usuario).Updates(updateItems)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -98,11 +99,11 @@ func (r *usuarioRepositoryImpl) Update(usuario *models.Usuario, updateItems map[
 
 func (r *usuarioRepositoryImpl) Delete(id uuid.UUID) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("id_usuario = ?", id).Delete(&models.PermissaoUsuario{}).Error; err != nil {
+		if err := tx.Where("id_usuario = ?", id).Delete(&model.PermissaoUsuario{}).Error; err != nil {
 			return err
 		}
 
-		if err := tx.Delete(&models.Usuario{}, "id = ?", id).Error; err != nil {
+		if err := tx.Delete(&models2.Usuario{}, "id = ?", id).Error; err != nil {
 			return err
 		}
 

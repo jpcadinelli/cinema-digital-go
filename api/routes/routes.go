@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"cinema_digital_go/api/middleware"
+	"cinema_digital_go/api/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 
