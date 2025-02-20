@@ -1,8 +1,8 @@
 package resource
 
 import (
-	"cinema_digital_go/api/internal/login/model"
-	"cinema_digital_go/api/internal/usuario/repository"
+	"cinema_digital_go/api/app/login/model"
+	"cinema_digital_go/api/app/usuario/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/middleware"

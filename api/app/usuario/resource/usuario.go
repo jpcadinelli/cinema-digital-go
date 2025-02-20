@@ -1,10 +1,10 @@
 package resource
 
 import (
-	"cinema_digital_go/api/internal/dropdown/model"
-	repository2 "cinema_digital_go/api/internal/permissao/resource"
-	models2 "cinema_digital_go/api/internal/usuario/model"
-	"cinema_digital_go/api/internal/usuario/repository"
+	"cinema_digital_go/api/app/dropdown/model"
+	repository2 "cinema_digital_go/api/app/permissao/resource"
+	models2 "cinema_digital_go/api/app/usuario/model"
+	"cinema_digital_go/api/app/usuario/repository"
 	dbConetion "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"

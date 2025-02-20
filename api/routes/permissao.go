@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"cinema_digital_go/api/internal/permissao/resource"
+	"cinema_digital_go/api/app/permissao/resource"
 	"github.com/gin-gonic/gin"
 )
 

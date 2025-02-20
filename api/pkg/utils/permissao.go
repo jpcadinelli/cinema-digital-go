@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"cinema_digital_go/api/internal/usuario/model"
+	"cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/pkg/global/enum"
 )
 

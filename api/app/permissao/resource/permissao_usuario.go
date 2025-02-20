@@ -1,7 +1,7 @@
 package resource
 
 import (
-	"cinema_digital_go/api/internal/permissao/model"
+	"cinema_digital_go/api/app/permissao/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

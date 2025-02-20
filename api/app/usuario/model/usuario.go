@@ -1,8 +1,8 @@
 package model
 
 import (
-	"cinema_digital_go/api/internal/dropdown/model"
-	model2 "cinema_digital_go/api/internal/permissao/model"
+	"cinema_digital_go/api/app/dropdown/model"
+	model2 "cinema_digital_go/api/app/permissao/model"
 	"cinema_digital_go/api/pkg/global"
 	"fmt"
 	"github.com/google/uuid"

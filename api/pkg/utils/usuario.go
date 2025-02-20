@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"cinema_digital_go/api/internal/usuario/model"
-	"cinema_digital_go/api/internal/usuario/repository"
+	"cinema_digital_go/api/app/usuario/model"
+	"cinema_digital_go/api/app/usuario/repository"
 	dbConetion "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/security"

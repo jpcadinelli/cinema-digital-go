@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"cinema_digital_go/api/internal/permissao/model"
-	models2 "cinema_digital_go/api/internal/usuario/model"
+	"cinema_digital_go/api/app/permissao/model"
+	models2 "cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"

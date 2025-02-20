@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"cinema_digital_go/api/internal/permissao/model"
+	"cinema_digital_go/api/app/permissao/model"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"

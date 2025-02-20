@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cinema_digital_go/api/internal/repository"
+	"cinema_digital_go/api/app/permissao/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/routes"
 	"github.com/gin-contrib/cors"

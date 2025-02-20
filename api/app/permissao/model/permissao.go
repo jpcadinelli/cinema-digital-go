@@ -1,7 +1,7 @@
 package model
 
 import (
-	"cinema_digital_go/api/internal/dropdown/model"
+	"cinema_digital_go/api/app/dropdown/model"
 	"cinema_digital_go/api/pkg/global"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
