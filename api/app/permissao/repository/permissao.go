@@ -1,18 +1,18 @@
 package repository
 
 import (
-	"cinema_digital_go/api/global/enum"
-	"cinema_digital_go/api/global/erros"
-	"cinema_digital_go/api/models"
+	"cinema_digital_go/api/app/permissao/model"
+	"cinema_digital_go/api/pkg/global/enum"
+	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type PermissaoRepository interface {
-	FindById(id uuid.UUID, preloads ...string) (*models.Permissao, error)
-	FindAll(preloads ...string) ([]models.Permissao, error)
-	Create(permissao *models.Permissao) error
-	Update(permissao *models.Permissao, updateItems map[string]interface{}) (*models.Permissao, error)
+	FindById(id uuid.UUID, preloads ...string) (*model.Permissao, error)
+	FindAll(preloads ...string) ([]model.Permissao, error)
+	Create(permissao *model.Permissao) error
+	Update(permissao *model.Permissao, updateItems map[string]interface{}) (*model.Permissao, error)
 	Delete(id uuid.UUID) error
 	GerenciaPermissoes() error
 }
@@ -25,8 +25,8 @@ func NewPermissaoRepository(db *gorm.DB) PermissaoRepository {
 	return &permissaoRepositoryImpl{db: db}
 }
 
-func (r *permissaoRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*models.Permissao, error) {
-	var permissao models.Permissao
+func (r *permissaoRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*model.Permissao, error) {
+	var permissao model.Permissao
 
 	tx := r.db
 	if len(preloads) > 0 {
@@ -46,8 +46,8 @@ func (r *permissaoRepositoryImpl) FindById(id uuid.UUID, preloads ...string) (*m
 	return &permissao, nil
 }
 
-func (r *permissaoRepositoryImpl) FindAll(preloads ...string) ([]models.Permissao, error) {
-	var permissoes []models.Permissao
+func (r *permissaoRepositoryImpl) FindAll(preloads ...string) ([]model.Permissao, error) {
+	var permissoes []model.Permissao
 
 	tx := r.db
 	if len(preloads) > 0 {
@@ -67,11 +67,11 @@ func (r *permissaoRepositoryImpl) FindAll(preloads ...string) ([]models.Permissa
 	return permissoes, nil
 }
 
-func (r *permissaoRepositoryImpl) Create(permissao *models.Permissao) error {
+func (r *permissaoRepositoryImpl) Create(permissao *model.Permissao) error {
 	return r.db.Create(permissao).Error
 }
 
-func (r *permissaoRepositoryImpl) Update(permissao *models.Permissao, updateItems map[string]interface{}) (*models.Permissao, error) {
+func (r *permissaoRepositoryImpl) Update(permissao *model.Permissao, updateItems map[string]interface{}) (*model.Permissao, error) {
 	tx := r.db.Model(permissao).Updates(updateItems)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -85,11 +85,11 @@ func (r *permissaoRepositoryImpl) Update(permissao *models.Permissao, updateItem
 
 func (r *permissaoRepositoryImpl) Delete(id uuid.UUID) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("id_permissao = ?", id).Delete(&models.PermissaoUsuario{}).Error; err != nil {
+		if err := tx.Where("id_permissao = ?", id).Delete(&model.PermissaoUsuario{}).Error; err != nil {
 			return err
 		}
 
-		if err := tx.Delete(&models.Permissao{}, "id = ?", id).Error; err != nil {
+		if err := tx.Delete(&model.Permissao{}, "id = ?", id).Error; err != nil {
 			return err
 		}
 
@@ -98,14 +98,14 @@ func (r *permissaoRepositoryImpl) Delete(id uuid.UUID) error {
 }
 
 func (r *permissaoRepositoryImpl) GerenciaPermissoes() error {
-	var permissoes []models.Permissao
+	var permissoes []model.Permissao
 
 	tx := r.db.Find(&permissoes)
 	if tx.Error != nil {
 		return tx.Error
 	}
 
-	var permissoesFaltantes []models.Permissao
+	var permissoesFaltantes []model.Permissao
 	for _, p := range enum.ListaPermissoes {
 		faltante := true
 		for _, permissao := range permissoes {
@@ -115,7 +115,7 @@ func (r *permissaoRepositoryImpl) GerenciaPermissoes() error {
 			}
 		}
 		if faltante {
-			permissoesFaltantes = append(permissoesFaltantes, models.Permissao{
+			permissoesFaltantes = append(permissoesFaltantes, model.Permissao{
 				Nome:      p,
 				Descricao: "Criado pelo sistema.",
 			})
