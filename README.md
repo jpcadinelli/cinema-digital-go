@@ -10,24 +10,46 @@ Ideia da arquitetura do sistema
 
 api/
 │── app/                    # Módulos principais do sistema
+
 │   ├── cinema/             # Gerenciamento de cinemas, salas, filmes e sessões
+
 │   │   ├── model/          # Estruturas (structs) de Cinema, Sala, Filme, Sessão
+
 │   │   ├── repository/     # Operações de banco de dados para cinema
+
 │   │   ├── resource/       # Handlers e controllers dos endpoints de cinema
+
 │   ├── usuario/            # Gerenciamento de usuários
+
 │   │   ├── model/          # Estruturas de usuário
+
 │   │   ├── repository/     # Banco de dados para usuários
+
 │   │   ├── resource/       # Handlers e controllers para usuários
+
 │   ├── permissao/          # Gerenciamento de permissões
+
 │   │   ├── model/          # Estruturas de permissões
+
 │   │   ├── repository/     # Banco de dados para permissões
+
 │   │   ├── resource/       # Handlers e controllers para permissões
+
 │
+
 │── pkg/                    # Pacotes compartilhados
+
 │   ├── database/           # Configuração do banco de dados
+
 │   ├── middleware/         # Middlewares (autenticação, logs, etc.)
+
 │   ├── security/           # Segurança (JWT, criptografia)
+
 │   ├── utils/              # Funções auxiliares
+
 │
+
 │── routes/                 # Definição de rotas da API
+
 │── main.go                 # Ponto de entrada da aplicação
+
