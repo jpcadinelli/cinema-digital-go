@@ -42,7 +42,7 @@ func GetConnection() (*gorm.DB, error) {
 }
 
 func RunMigrations() error {
-	migrationsDir := "api/database/migrations"
+	migrationsDir := "api/pkg/database/migrations"
 
 	err = createMigrationHistoryTable()
 	if err != nil {
