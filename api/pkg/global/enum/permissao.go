@@ -20,6 +20,10 @@ var (
 		PermissaoUsuarioAtribuirPermissao,
 		PermissaoUsuarioRemoverPermissao,
 	}
+	GrupoN1Permissoes = []string{
+		PermissaoUsuarioVisualizar,
+		PermissaoUsuarioAtualizar,
+	}
 )
 
 const (
