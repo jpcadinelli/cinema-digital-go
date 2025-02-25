@@ -50,6 +50,8 @@ func iniciaRotasAPI() {
 		AllowCredentials: true,
 	}))
 
+	routes.SetupGeneroRoutes(router, dbConection.DB)
+
 	router = routes.SetupRoutes(router)
 	err := router.Run(":8080")
 	if err != nil {
