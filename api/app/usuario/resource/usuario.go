@@ -17,27 +17,16 @@ import (
 )
 
 func Criar(ginctx *gin.Context) {
-	usuarioLogado, err := service2.GetUsuarioLogado(ginctx)
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoUsuarioCriar) {
-		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
 	var u models2.Usuario
 
-	if err = ginctx.ShouldBindJSON(&u); err != nil {
+	if err := ginctx.ShouldBindJSON(&u); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
 	u.Password = security.SHA256Encoder(u.Password)
 
-	if err = repository.NewUsuarioRepository(dbConetion.DB).Create(&u); err != nil {
+	if err := repository.NewUsuarioRepository(dbConetion.DB).Create(&u); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
