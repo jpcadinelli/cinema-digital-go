@@ -82,7 +82,29 @@ func (r *usuarioRepositoryImpl) FindAll(preloads ...string) ([]models2.Usuario, 
 }
 
 func (r *usuarioRepositoryImpl) Create(usuario *models2.Usuario) error {
-	return r.db.Create(usuario).Error
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		permissoes := usuario.Permissoes
+		usuario.Permissoes = []model.Permissao{}
+
+		if err := tx.Create(usuario).Error; err != nil {
+			return err
+		}
+
+		var pu []model.PermissaoUsuario
+		for _, p := range permissoes {
+			pu = append(pu, model.PermissaoUsuario{
+				IdPermissao: p.Id,
+				IdUsuario:   usuario.Id,
+			})
+		}
+
+		if err := tx.Create(&pu).Error; err != nil {
+			return err
+		}
+
+		usuario.Permissoes = permissoes
+		return nil
+	})
 }
 
 func (r *usuarioRepositoryImpl) Update(usuario *models2.Usuario, updateItems map[string]interface{}) (*models2.Usuario, error) {

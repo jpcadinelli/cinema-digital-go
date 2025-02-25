@@ -2,6 +2,7 @@ package resource
 
 import (
 	"cinema_digital_go/api/app/dropdown/model"
+	repository3 "cinema_digital_go/api/app/permissao/repository"
 	repository2 "cinema_digital_go/api/app/permissao/resource"
 	models2 "cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/app/usuario/repository"
@@ -17,16 +18,23 @@ import (
 )
 
 func Criar(ginctx *gin.Context) {
-	var u models2.Usuario
+	var (
+		u   models2.Usuario
+		err error
+	)
 
-	if err := ginctx.ShouldBindJSON(&u); err != nil {
+	if err = ginctx.ShouldBindJSON(&u); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
 	u.Password = security.SHA256Encoder(u.Password)
+	if u.Permissoes, err = repository3.NewPermissaoRepository(dbConetion.DB).FindByGroup(enum.GrupoN1Permissoes); err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
 
-	if err := repository.NewUsuarioRepository(dbConetion.DB).Create(&u); err != nil {
+	if err = repository.NewUsuarioRepository(dbConetion.DB).Create(&u); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
