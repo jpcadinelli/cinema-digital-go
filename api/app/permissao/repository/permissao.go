@@ -11,6 +11,7 @@ import (
 type PermissaoRepository interface {
 	FindById(id uuid.UUID, preloads ...string) (*model.Permissao, error)
 	FindAll(preloads ...string) ([]model.Permissao, error)
+	FindByGroup(group []string) ([]model.Permissao, error)
 	Create(permissao *model.Permissao) error
 	Update(permissao *model.Permissao, updateItems map[string]interface{}) (*model.Permissao, error)
 	Delete(id uuid.UUID) error
@@ -62,6 +63,20 @@ func (r *permissaoRepositoryImpl) FindAll(preloads ...string) ([]model.Permissao
 	}
 	if tx.RowsAffected == 0 {
 		return permissoes, erros.ErrPermissaoNaoEncontrada
+	}
+
+	return permissoes, nil
+}
+
+func (r *permissaoRepositoryImpl) FindByGroup(group []string) ([]model.Permissao, error) {
+	var permissoes []model.Permissao
+
+	tx := r.db.Where("permissao.nome IN ?", group).Find(&permissoes)
+	if tx.Error != nil {
+		return permissoes, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return permissoes, erros.ErrGrupoDePermissoesNaoEncontradas
 	}
 
 	return permissoes, nil

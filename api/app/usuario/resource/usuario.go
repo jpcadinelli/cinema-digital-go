@@ -3,6 +3,10 @@ package resource
 import (
 	permissao "cinema_digital_go/api/app/permissao/resource"
 	"cinema_digital_go/api/app/usuario/model"
+	"cinema_digital_go/api/app/dropdown/model"
+	repository3 "cinema_digital_go/api/app/permissao/repository"
+	repository2 "cinema_digital_go/api/app/permissao/resource"
+	models2 "cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/app/usuario/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
@@ -16,18 +20,10 @@ import (
 )
 
 func Criar(ginctx *gin.Context) {
-	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoUsuarioCriar) {
-		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
-	var u model.Usuario
+	var (
+		u   models2.Usuario
+		err error
+	)
 
 	if err = ginctx.ShouldBindJSON(&u); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
@@ -35,6 +31,10 @@ func Criar(ginctx *gin.Context) {
 	}
 
 	u.Password = security.SHA256Encoder(u.Password)
+	if u.Permissoes, err = repository3.NewPermissaoRepository(dbConetion.DB).FindByGroup(enum.GrupoN1Permissoes); err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
 
 	if err = repository.NewUsuarioRepository(dbConection.DB).Create(&u); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))

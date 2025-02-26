@@ -11,7 +11,6 @@ var (
 		PermissaoPermissaoAtualizar,
 		PermissaoPermissaoDeletar,
 
-		PermissaoUsuarioCriar,
 		PermissaoUsuarioVisualizar,
 		PermissaoUsuarioListar,
 		PermissaoUsuarioDropdown,
@@ -20,6 +19,10 @@ var (
 
 		PermissaoUsuarioAtribuirPermissao,
 		PermissaoUsuarioRemoverPermissao,
+	}
+	GrupoN1Permissoes = []string{
+		PermissaoUsuarioVisualizar,
+		PermissaoUsuarioAtualizar,
 	}
 )
 
@@ -33,7 +36,6 @@ const (
 	PermissaoPermissaoAtualizar  = "PERMISSAO_ATUALIZAR"
 	PermissaoPermissaoDeletar    = "PERMISSAO_DELETAR"
 
-	PermissaoUsuarioCriar      = "USUARIO_CRIAR"
 	PermissaoUsuarioVisualizar = "USUARIO_VISUALIZAR"
 	PermissaoUsuarioListar     = "USUARIO_LISTAR"
 	PermissaoUsuarioDropdown   = "USUARIO_DROPDOWN"
