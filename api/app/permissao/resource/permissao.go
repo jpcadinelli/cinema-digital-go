@@ -9,7 +9,6 @@ import (
 	"cinema_digital_go/api/pkg/middleware"
 	"cinema_digital_go/api/pkg/utils"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 )
 
@@ -52,14 +51,12 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	idStr := ginctx.Param("id")
-	id, err := uuid.Parse(idStr)
+	id, err := utils.GetParamID(ginctx.Params, "id")
 	if err != nil {
-		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	p, err := repository.NewPermissaoRepository(dbConection.DB).FindById(id)
+	p, err := repository.NewPermissaoRepository(dbConection.DB).FindById(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
@@ -140,14 +137,12 @@ func Deletar(ginctx *gin.Context) {
 		return
 	}
 
-	idStr := ginctx.Param("id")
-	id, err := uuid.Parse(idStr)
+	id, err := utils.GetParamID(ginctx.Params, "id")
 	if err != nil {
-		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	err = repository.NewPermissaoRepository(dbConection.DB).Delete(id)
+	err = repository.NewPermissaoRepository(dbConection.DB).Delete(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
