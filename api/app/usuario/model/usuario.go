@@ -23,9 +23,13 @@ type Usuario struct {
 }
 
 func (u *Usuario) BeforeCreate(_ *gorm.DB) (err error) {
-	u.Id = uuid.New()
+	id, err := uuid.NewV7()
+	if err != nil {
+		return err
+	}
+	u.Id = id
 	u.CreatedAt = time.Now()
-	return err
+	return nil
 }
 
 func (u *Usuario) TableName() string {

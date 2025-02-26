@@ -1,6 +1,7 @@
 package routes
 
 import (
+	dropdown "cinema_digital_go/api/app/dropdown/resource"
 	"cinema_digital_go/api/app/usuario/resource"
 	"cinema_digital_go/api/pkg/middleware"
 	"github.com/gin-gonic/gin"
@@ -8,9 +9,10 @@ import (
 
 func usuarioRoutes(r *gin.RouterGroup) {
 	r.POST(route, resource.Criar)
+
 	r.GET(routeId, resource.Visualizar, middleware.Auth(), middleware.Auth())
 	r.GET(route, resource.Listar, middleware.Auth())
-	r.GET(routeDropdown, resource.Dropdown, middleware.Auth())
+	r.GET(routeDropdown, dropdown.DropdownUsuarios, middleware.Auth())
 	r.PUT(route, resource.Atualizar, middleware.Auth())
 	r.DELETE(routeId, resource.Deletar, middleware.Auth())
 
