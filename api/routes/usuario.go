@@ -1,6 +1,7 @@
 package routes
 
 import (
+	dropdown "cinema_digital_go/api/app/dropdown/resource"
 	"cinema_digital_go/api/app/usuario/resource"
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +10,7 @@ func usuarioRoutes(r *gin.RouterGroup) {
 	r.POST(route, resource.Criar)
 	r.GET(routeId, resource.Visualizar)
 	r.GET(route, resource.Listar)
-	r.GET(routeDropdown, resource.Dropdown)
+	r.GET(routeDropdown, dropdown.DropdownUsuarios)
 	r.PUT(route, resource.Atualizar)
 	r.DELETE(routeId, resource.Deletar)
 

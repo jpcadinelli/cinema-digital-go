@@ -6,7 +6,7 @@ import (
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/middleware"
-	security2 "cinema_digital_go/api/pkg/security"
+	"cinema_digital_go/api/pkg/security"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -25,12 +25,12 @@ func Login(ginctx *gin.Context) {
 		return
 	}
 
-	if usuario.Password != security2.SHA256Encoder(l.Password) {
+	if usuario.Password != security.SHA256Encoder(l.Password) {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrCredenciaisInvalidas, nil))
 		return
 	}
 
-	token, err := security2.NewJWTService().GenerateToken(usuario.Id)
+	token, err := security.NewJWTService().GenerateToken(usuario.Id)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
