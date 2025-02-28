@@ -42,10 +42,6 @@ const (
 	PermissaoUsuarioAtualizar  = "USUARIO_ATUALIZAR"
 	PermissaoUsuarioDeletar    = "USUARIO_DELETAR"
 
-	PermissaoFilmeCriar     = "FILME_CRIAR"
-	PermissaoFilmeAtualizar = "FILME_ATUALIZAR"
-	PermissaoFilmeDeletar   = "FILME_DELETAR"
-
 	PermissaoUsuarioAtribuirPermissao = "USUARIO_ATRIBUIR_PERMISSAO"
 	PermissaoUsuarioRemoverPermissao  = "USUARIO_REMOVER_PERMISSAO"
 )

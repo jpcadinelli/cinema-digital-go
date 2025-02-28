@@ -3,120 +3,64 @@ package resource
 import (
 	"cinema_digital_go/api/app/genero/model"
 	"cinema_digital_go/api/app/genero/repository"
+	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/middleware"
-	service2 "cinema_digital_go/api/pkg/utils"
-	"github.com/google/uuid"
-	"net/http"
-
+	"cinema_digital_go/api/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-type GeneroResource struct {
-	repo repository.GeneroRepository
+func Criar(ginctx *gin.Context) {
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroCriar) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+		return
+	}
+
+	var g model.Genero
+	if err = ginctx.ShouldBindJSON(&g); err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if err = repository.NewGeneroRepository(dbConection.DB).Create(&g); err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	ginctx.JSON(http.StatusCreated, middleware.NewResponseBridge(nil, g))
 }
 
-func NewGeneroResource(repo repository.GeneroRepository) *GeneroResource {
-	return &GeneroResource{repo}
-}
-
-func (h *GeneroResource) Create(c *gin.Context) {
-	usuarioLogado, err := service2.GetUsuarioLogado(c)
+func Visualizar(ginctx *gin.Context) {
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoUsuarioCriar) {
-		c.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroVisualizar) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
 
-	var genero model.Genero
-	if err := c.ShouldBindJSON(&genero); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
-		return
-	}
-
-	genero.ID = uuid.New()
-
-	if err := h.repo.Create(&genero); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criar o gênero"})
-		return
-	}
-	c.JSON(http.StatusCreated, genero)
-}
-
-func (h *GeneroResource) GetAll(c *gin.Context) {
-	usuarioLogado, err := service2.GetUsuarioLogado(c)
+	id, err := utils.GetParamID(ginctx.Params, "id")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoUsuarioVisualizar) {
-		c.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
-	genero, err := h.repo.GetAll()
+	g, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar gêneros"})
-		return
-	}
-	c.JSON(http.StatusOK, genero)
-}
-
-func (h *GeneroResource) Update(c *gin.Context) {
-	id := c.Param("id")
-
-	idUUID, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	var genero model.Genero
-	if err := c.ShouldBindJSON(&genero); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
-		return
-	}
-
-	genero.ID = idUUID
-
-	if err := h.repo.Update(&genero); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar o gênero"})
-		return
-	}
-
-	c.JSON(http.StatusOK, genero)
-}
-
-func (h *GeneroResource) Delete(c *gin.Context) {
-	id := c.Param("id")
-
-	idUUID, err := uuid.Parse(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ID inválido"})
-		return
-	}
-
-	usuarioLogado, err := service2.GetUsuarioLogado(c)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	if !service2.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoUsuarioDeletar) {
-		c.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
-	if err := h.repo.Delete(idUUID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao deletar o gênero"})
-		return
-	}
-
-	c.JSON(http.StatusNoContent, nil)
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, g))
 }

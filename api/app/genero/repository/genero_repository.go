@@ -8,50 +8,53 @@ import (
 
 type GeneroRepository interface {
 	Create(genero *model.Genero) error
-	GetAll() ([]model.Genero, error)
-	Update(genero *model.Genero) error
-	Delete(id uuid.UUID) error
-	GetByName(nome string) (*model.Genero, error)
+	FindById(id uuid.UUID) (*model.Genero, error)
+	FindAll(preloads ...string) ([]model.Genero, error)
 }
 
-type generoRepository struct {
+type generoRepositoryImpl struct {
 	db *gorm.DB
 }
 
 func NewGeneroRepository(db *gorm.DB) GeneroRepository {
-	return &generoRepository{db}
+	return &generoRepositoryImpl{db: db}
 }
 
-func (r *generoRepository) Create(genero *model.Genero) error {
-	if genero.ID == uuid.Nil {
-		genero.ID = uuid.New()
-	}
-
-	return r.db.Table("genero").Create(genero).Error
+func (r *generoRepositoryImpl) Create(genero *model.Genero) error {
+	return r.db.Create(genero).Error
 }
 
-func (r *generoRepository) GetAll() ([]model.Genero, error) {
-	var generos []model.Genero
-	err := r.db.Table("genero").Find(&generos).Error
-	return generos, err
-}
-
-func (r *generoRepository) Update(genero *model.Genero) error {
-	return r.db.Table("genero").Save(genero).Error
-}
-
-func (r *generoRepository) Delete(id uuid.UUID) error {
-	return r.db.Table("genero").Where("id = ?", id).Delete(&model.Genero{}).Error
-}
-
-func (r *generoRepository) GetByName(nome string) (*model.Genero, error) {
+func (r *generoRepositoryImpl) FindById(id uuid.UUID) (*model.Genero, error) {
 	var genero model.Genero
-	err := r.db.Table("genero").Where("nome = ?", nome).First(&genero).Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
-		return nil, err
+
+	tx := r.db.First(&genero, "id = ?", id)
+	if tx.Error != nil {
+		return nil, tx.Error
 	}
+	if tx.RowsAffected == 0 {
+		return nil, erros.ErrGeneroNaoEncontrado
+	}
+
 	return &genero, nil
+}
+
+func (r *generoRepositoryImpl) FindAll(preloads ...string) ([]model.Genero, error) {
+	var generos []model.Genero
+
+	tx := r.db
+	if len(preloads) > 0 {
+		for _, preload := range preloads {
+			tx = tx.Preload(preload)
+		}
+	}
+
+	tx = tx.Find(&generos)
+	if tx.Error != nil {
+		return generos, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return generos, erros.ErrGeneroNaoEncontrado
+	}
+
+	return generos, nil
 }
