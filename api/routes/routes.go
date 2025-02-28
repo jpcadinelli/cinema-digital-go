@@ -27,6 +27,10 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			permissaoRoutes(permissaoGroup)
 		}
+		filmeGroup := main.Group("/filmes")
+		{
+			filmeRoutes(filmeGroup)
+		}
 	}
 
 	return router
