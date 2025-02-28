@@ -19,4 +19,6 @@ var (
 
 	ErrPermissaoNaoEncontrada          = fmt.Errorf("permissão não encontrada")
 	ErrGrupoDePermissoesNaoEncontradas = fmt.Errorf("grupo de permissões não encontradas")
+
+	ErrFilmeNaoEncontrado = fmt.Errorf("filme não encontrado")
 )

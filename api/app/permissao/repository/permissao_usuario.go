@@ -1,4 +1,4 @@
-package resource
+package repository
 
 import (
 	"cinema_digital_go/api/app/permissao/model"

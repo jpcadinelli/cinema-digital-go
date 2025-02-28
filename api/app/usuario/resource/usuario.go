@@ -2,7 +2,6 @@ package resource
 
 import (
 	permissaoRepository "cinema_digital_go/api/app/permissao/repository"
-	permissao "cinema_digital_go/api/app/permissao/resource"
 	"cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/app/usuario/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
@@ -188,7 +187,7 @@ func AtribuirPermissao(ginctx *gin.Context) {
 		return
 	}
 
-	permissaoUsuario, err := permissao.NewPermissaoUsuarioRepository(dbConection.DB).FindRelations(*id, *idPermissao)
+	permissaoUsuario, err := permissaoRepository.NewPermissaoUsuarioRepository(dbConection.DB).FindRelations(*id, *idPermissao)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
@@ -219,7 +218,7 @@ func RemoverPermissao(ginctx *gin.Context) {
 		return
 	}
 
-	if err = permissao.NewPermissaoUsuarioRepository(dbConection.DB).Delete(*id, *idPermissao); err != nil {
+	if err = permissaoRepository.NewPermissaoUsuarioRepository(dbConection.DB).Delete(*id, *idPermissao); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
