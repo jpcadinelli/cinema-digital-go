@@ -31,6 +31,10 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			filmeRoutes(filmeGroup)
 		}
+		generoGroup := main.Group("/generos", middleware.Auth())
+		{
+			generoRoutes(generoGroup)
+		}
 	}
 
 	return router

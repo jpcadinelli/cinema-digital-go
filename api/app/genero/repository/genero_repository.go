@@ -2,6 +2,7 @@ package repository
 
 import (
 	"cinema_digital_go/api/app/genero/model"
+	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

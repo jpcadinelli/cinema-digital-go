@@ -19,6 +19,17 @@ var (
 
 		PermissaoUsuarioAtribuirPermissao,
 		PermissaoUsuarioRemoverPermissao,
+
+		PermissaoFilmeCriar,
+		PermissaoFilmeAtualizar,
+		PermissaoFilmeDeletar,
+
+		PermissaoGeneroCriar,
+		PermissaoGeneroVisualizar,
+		PermissaoGeneroListar,
+		PermissaoGeneroDropdown,
+		PermissaoGeneroAtualizar,
+		PermissaoGeneroDeletar,
 	}
 	GrupoN1Permissoes = []string{
 		PermissaoUsuarioVisualizar,
@@ -44,4 +55,15 @@ const (
 
 	PermissaoUsuarioAtribuirPermissao = "USUARIO_ATRIBUIR_PERMISSAO"
 	PermissaoUsuarioRemoverPermissao  = "USUARIO_REMOVER_PERMISSAO"
+
+	PermissaoFilmeCriar     = "FILME_CRIAR"
+	PermissaoFilmeAtualizar = "FILME_ATUALIZAR"
+	PermissaoFilmeDeletar   = "FILME_DELETAR"
+
+	PermissaoGeneroCriar      = "GENERO_CRIAR"
+	PermissaoGeneroVisualizar = "GENERO_VISUALIZAR"
+	PermissaoGeneroListar     = "GENERO_LISTAR"
+	PermissaoGeneroDropdown   = "GENERO_DROPDOWN"
+	PermissaoGeneroAtualizar  = "GENERO_ATUALIZAR"
+	PermissaoGeneroDeletar    = "GENERO_DELETAR"
 )

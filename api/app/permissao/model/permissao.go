@@ -23,7 +23,7 @@ func (p *Permissao) BeforeCreate(_ *gorm.DB) (err error) {
 }
 
 func (p *Permissao) TableName() string {
-	return global.TablePermissao
+	return global.TabelaPermissao
 }
 
 func (p *Permissao) PermissaoToDropdownUUID() *model.DropdownUUID {
@@ -49,5 +49,5 @@ func (pu *PermissaoUsuario) BeforeCreate(_ *gorm.DB) (err error) {
 }
 
 func (pu *PermissaoUsuario) TableName() string {
-	return global.TablePermissaoUsuario
+	return global.TabelaPermissaoUsuario
 }
