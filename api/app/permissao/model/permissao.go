@@ -14,8 +14,12 @@ type Permissao struct {
 }
 
 func (p *Permissao) BeforeCreate(_ *gorm.DB) (err error) {
-	p.Id = uuid.New()
-	return err
+	id, err := uuid.NewV7()
+	if err != nil {
+		return err
+	}
+	p.Id = id
+	return nil
 }
 
 func (p *Permissao) TableName() string {
@@ -36,8 +40,12 @@ type PermissaoUsuario struct {
 }
 
 func (pu *PermissaoUsuario) BeforeCreate(_ *gorm.DB) (err error) {
-	pu.Id = uuid.New()
-	return err
+	id, err := uuid.NewV7()
+	if err != nil {
+		return err
+	}
+	pu.Id = id
+	return nil
 }
 
 func (pu *PermissaoUsuario) TableName() string {
