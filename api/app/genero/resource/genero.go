@@ -8,6 +8,7 @@ import (
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/middleware"
 	"cinema_digital_go/api/pkg/utils"
+	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -63,4 +64,70 @@ func Visualizar(ginctx *gin.Context) {
 	}
 
 	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, g))
+}
+
+func Atualizar(ginctx *gin.Context) {
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroAtualizar) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+		return
+	}
+
+	id, err := utils.GetParamID(ginctx.Params, "id")
+	if err != nil {
+		return
+	}
+
+	fOld, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
+	if err != nil {
+		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Genero não encontrado"), nil))
+		return
+	}
+
+	var g model.Genero
+	if err = ginctx.ShouldBindJSON(&g); err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	updateItems := utils.GerarCamposAtualizacao(&g)
+
+	fOld, err = repository.NewGeneroRepository(dbConection.DB).Update(fOld, updateItems)
+	if err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, fOld))
+}
+
+func Deletar(ginctx *gin.Context) {
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroDeletar) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+		return
+	}
+
+	id, err := utils.GetParamID(ginctx.Params, "id")
+	if err != nil {
+		return
+	}
+
+	err = repository.NewGeneroRepository(dbConection.DB).Delete(*id)
+	if err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	ginctx.JSON(http.StatusNoContent, middleware.NewResponseBridge(nil, nil))
 }
