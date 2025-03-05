@@ -35,5 +35,5 @@ func (f *Filme) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (f *Filme) TableName() string {
-	return global.TableFilme
+	return global.TabelaFilme
 }

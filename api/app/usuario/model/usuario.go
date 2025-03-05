@@ -33,7 +33,7 @@ func (u *Usuario) BeforeCreate(_ *gorm.DB) (err error) {
 }
 
 func (u *Usuario) TableName() string {
-	return global.TableUsuario
+	return global.TabelaUsuario
 }
 
 type UsuarioDTOResponse struct {

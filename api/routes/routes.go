@@ -27,9 +27,13 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			permissaoRoutes(permissaoGroup)
 		}
-		filmeGroup := main.Group("/filmes")
+		filmeGroup := main.Group("/filmes", middleware.Auth())
 		{
 			filmeRoutes(filmeGroup)
+		}
+		generoGroup := main.Group("/generos", middleware.Auth())
+		{
+			generoRoutes(generoGroup)
 		}
 	}
 

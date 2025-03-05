@@ -54,6 +54,7 @@ func Visualizar(ginctx *gin.Context) {
 
 	id, err := utils.GetParamID(ginctx.Params, "id")
 	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
