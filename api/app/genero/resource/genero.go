@@ -31,6 +31,11 @@ func Criar(ginctx *gin.Context) {
 		return
 	}
 
+	if g.Nome == "" {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrGeneroInvalido, nil))
+		return
+	}
+
 	if err = repository.NewGeneroRepository(dbConection.DB).Create(&g); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return

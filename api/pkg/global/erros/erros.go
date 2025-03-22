@@ -23,4 +23,5 @@ var (
 	ErrFilmeNaoEncontrado = fmt.Errorf("filme não encontrado")
 
 	ErrGeneroNaoEncontrado = fmt.Errorf("gênero não encontrado")
+	ErrGeneroInvalido      = fmt.Errorf("nome de gênero inválido")
 )

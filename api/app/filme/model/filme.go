@@ -1,6 +1,7 @@
 package model
 
 import (
+	modelGen "cinema_digital_go/api/app/genero/model"
 	"cinema_digital_go/api/pkg/global"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -8,18 +9,19 @@ import (
 )
 
 type Filme struct {
-	Id                uuid.UUID       `json:"id"`
-	Titulo            string          `json:"titulo"`
-	Sinopse           string          `json:"sinopse"`
-	Diretor           string          `json:"diretor"`
-	Duracao           uint            `json:"duracao"`
-	AnoLancamento     time.Time       `json:"ano_lancamento"`
-	Classificacao     uint            `json:"classificacao"`
-	Nota              float64         `json:"nota"`
-	Criado            time.Time       `json:"criado"`
-	Atualizado        time.Time       `json:"atualizado"`
-	Excluido          *gorm.DeletedAt `json:"excluido"`
-	IdUsuarioRegistro uuid.UUID       `json:"id_usuario_registro"`
+	Id                uuid.UUID         `json:"id"`
+	Titulo            string            `json:"titulo"`
+	Sinopse           string            `json:"sinopse"`
+	Diretor           string            `json:"diretor"`
+	Duracao           uint              `json:"duracao"`
+	AnoLancamento     time.Time         `json:"ano_lancamento"`
+	Classificacao     uint              `json:"classificacao"`
+	Nota              float64           `json:"nota"`
+	Criado            time.Time         `json:"criado"`
+	Atualizado        time.Time         `json:"atualizado"`
+	Excluido          *gorm.DeletedAt   `json:"excluido"`
+	IdUsuarioRegistro uuid.UUID         `json:"id_usuario_registro"`
+	Generos           []modelGen.Genero `json:"generos" gorm:"many2many:re_filme_genero;"`
 }
 
 func (f *Filme) BeforeCreate(_ *gorm.DB) (err error) {
