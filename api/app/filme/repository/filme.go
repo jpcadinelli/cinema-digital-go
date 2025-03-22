@@ -66,7 +66,27 @@ func (r *filmeRepositoryImpl) FindAll(preloads ...string) ([]model.Filme, error)
 }
 
 func (r *filmeRepositoryImpl) Create(filme *model.Filme) error {
-	return r.db.Create(filme).Error
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		f := filme.GetOnlyFilme()
+		if err := tx.Create(f).Error; err != nil {
+			return err
+		}
+
+		filme.Id = f.Id
+
+		var listRe []model.ReFilmeGenero
+		for _, re := range filme.Generos {
+			listRe = append(listRe, model.ReFilmeGenero{
+				IdFilme:  f.Id,
+				IdGenero: re.Id,
+			})
+		}
+		if err := tx.Create(&listRe).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
 func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error) {

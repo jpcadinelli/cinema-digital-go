@@ -30,9 +30,6 @@ var (
 		PermissaoGeneroDropdown,
 		PermissaoGeneroAtualizar,
 		PermissaoGeneroDeletar,
-
-		PermissaoFilmeAdicionarGenero,
-		PermissaoFilmeRemoverGenero,
 	}
 	GrupoN1Permissoes = []string{
 		PermissaoUsuarioVisualizar,
@@ -69,7 +66,4 @@ const (
 	PermissaoGeneroDropdown   = "GENERO_DROPDOWN"
 	PermissaoGeneroAtualizar  = "GENERO_ATUALIZAR"
 	PermissaoGeneroDeletar    = "GENERO_DELETAR"
-
-	PermissaoFilmeAdicionarGenero = "FILME_ADICIONAR_GENERO"
-	PermissaoFilmeRemoverGenero   = "FILME_REMOVER_GENERO"
 )

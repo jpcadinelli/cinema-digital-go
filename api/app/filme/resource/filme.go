@@ -47,7 +47,7 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	f, err := repository.NewFilmeRepository(dbConection.DB).FindById(*id)
+	f, err := repository.NewFilmeRepository(dbConection.DB).FindById(*id, "Generos")
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
@@ -57,7 +57,7 @@ func Visualizar(ginctx *gin.Context) {
 }
 
 func Listar(ginctx *gin.Context) {
-	filmes, err := repository.NewFilmeRepository(dbConection.DB).FindAll()
+	filmes, err := repository.NewFilmeRepository(dbConection.DB).FindAll("Generos")
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
@@ -124,72 +124,6 @@ func Deletar(ginctx *gin.Context) {
 	}
 
 	err = repository.NewFilmeRepository(dbConection.DB).Delete(*id)
-	if err != nil {
-		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	ginctx.JSON(http.StatusNoContent, middleware.NewResponseBridge(nil, nil))
-}
-
-func AdicionarGenero(ginctx *gin.Context) {
-	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoFilmeAdicionarGenero) {
-		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
-	id, err := utils.GetParamID(ginctx.Params, "id")
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	idGenero, err := utils.GetParamID(ginctx.Params, "idGenero")
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	err = repository.NewFilmeRepository(dbConection.DB).AdicionarGenero(id, idGenero)
-	if err != nil {
-		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	ginctx.JSON(http.StatusNoContent, middleware.NewResponseBridge(nil, nil))
-}
-
-func RemoverGenero(ginctx *gin.Context) {
-	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoFilmeRemoverGenero) {
-		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
-		return
-	}
-
-	id, err := utils.GetParamID(ginctx.Params, "id")
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	idGenero, err := utils.GetParamID(ginctx.Params, "idGenero")
-	if err != nil {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
-		return
-	}
-
-	err = repository.NewFilmeRepository(dbConection.DB).RemoverGenero(id, idGenero)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return

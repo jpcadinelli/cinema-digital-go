@@ -21,7 +21,7 @@ type Filme struct {
 	Atualizado        time.Time         `json:"atualizado"`
 	Excluido          *gorm.DeletedAt   `json:"excluido"`
 	IdUsuarioRegistro uuid.UUID         `json:"id_usuario_registro"`
-	Generos           []modelGen.Genero `json:"generos" gorm:"many2many:re_filme_genero;"`
+	Generos           []modelGen.Genero `json:"generos" gorm:"many2many:re_filme_genero;foreignKey:id;References:id;re_filme_genero;joinForeignKey:id_filme;joinReferences:id_genero"`
 }
 
 func (f *Filme) BeforeCreate(_ *gorm.DB) (err error) {
@@ -38,4 +38,21 @@ func (f *Filme) BeforeUpdate(tx *gorm.DB) (err error) {
 
 func (f *Filme) TableName() string {
 	return global.TabelaFilme
+}
+
+func (f *Filme) GetOnlyFilme() *Filme {
+	return &Filme{
+		Id:                f.Id,
+		Titulo:            f.Titulo,
+		Sinopse:           f.Sinopse,
+		Diretor:           f.Diretor,
+		Duracao:           f.Duracao,
+		AnoLancamento:     f.AnoLancamento,
+		Classificacao:     f.Classificacao,
+		Nota:              f.Nota,
+		Criado:            f.Criado,
+		Atualizado:        f.Atualizado,
+		Excluido:          f.Excluido,
+		IdUsuarioRegistro: f.IdUsuarioRegistro,
+	}
 }
