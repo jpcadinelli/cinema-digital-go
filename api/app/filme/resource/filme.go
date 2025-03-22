@@ -95,7 +95,16 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	updateItems := utils.GerarCamposAtualizacao(&f)
+	updateItems := map[string]interface{}{
+		"titulo":              f.Titulo,
+		"sinopse":             f.Sinopse,
+		"diretor":             f.Diretor,
+		"duracao":             f.Duracao,
+		"ano_lancamento":      f.AnoLancamento,
+		"classificacao":       f.Classificacao,
+		"nota":                f.Nota,
+		"id_usuario_registro": usuarioLogado.Id,
+	}
 
 	fOld, err = repository.NewFilmeRepository(dbConection.DB).Update(fOld, updateItems)
 	if err != nil {

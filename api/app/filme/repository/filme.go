@@ -90,15 +90,71 @@ func (r *filmeRepositoryImpl) Create(filme *model.Filme) error {
 }
 
 func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error) {
-	tx := r.db.Model(filme).Updates(updateItems)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-	if tx.RowsAffected == 0 {
-		return nil, erros.ErrFilmeNaoEncontrado
+	var (
+		err       error
+		listReOld []model.ReFilmeGenero
+		listReAdd []model.ReFilmeGenero
+		listReRem []model.ReFilmeGenero
+	)
+
+	if err = r.db.Model(model.ReFilmeGenero{}).Where("id_filme = ?", filme.Id).Find(&listReOld).Error; err != nil {
+		return nil, err
 	}
 
-	return filme, nil
+	oldReMap := make(map[uuid.UUID]model.ReFilmeGenero)
+	for _, re := range listReOld {
+		oldReMap[re.IdGenero] = re
+	}
+
+	for _, re := range filme.Generos {
+		if _, exists := oldReMap[re.Id]; !exists {
+			listReAdd = append(listReAdd, model.ReFilmeGenero{
+				IdFilme:  filme.Id,
+				IdGenero: re.Id,
+			})
+		}
+	}
+
+	newReMap := make(map[uuid.UUID]model.ReFilmeGenero)
+	for _, re := range filme.Generos {
+		newReMap[re.Id] = model.ReFilmeGenero{
+			IdFilme:  filme.Id,
+			IdGenero: re.Id,
+		}
+	}
+
+	for _, re := range listReOld {
+		if _, exists := newReMap[re.IdGenero]; !exists {
+			listReRem = append(listReRem, re)
+		}
+	}
+
+	err = r.db.Transaction(func(tx *gorm.DB) error {
+		tx = tx.Model(filme).Updates(updateItems)
+		if tx.Error != nil {
+			return tx.Error
+		}
+		if tx.RowsAffected == 0 {
+			return erros.ErrFilmeNaoEncontrado
+		}
+
+		for _, re := range listReAdd {
+			if err = tx.Create(&re).Error; err != nil {
+				return err
+			}
+		}
+
+		for _, re := range listReRem {
+			// Dando panico na linha abaixo
+			if err = tx.Delete(&model.ReFilmeGenero{}, "id = ?", re.Id).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	return filme, err
 }
 
 func (r *filmeRepositoryImpl) Delete(id uuid.UUID) error {
