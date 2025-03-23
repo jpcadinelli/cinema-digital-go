@@ -2,6 +2,7 @@ package repository
 
 import (
 	"cinema_digital_go/api/app/filme/model"
+	modelGen "cinema_digital_go/api/app/genero/model"
 	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -11,7 +12,7 @@ type FilmeRepository interface {
 	FindById(id uuid.UUID, preloads ...string) (*model.Filme, error)
 	FindAll(preloads ...string) ([]model.Filme, error)
 	Create(filme *model.Filme) error
-	Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error)
+	Update(filme *model.Filme) (*model.Filme, error)
 	Delete(id uuid.UUID) error
 }
 
@@ -89,7 +90,7 @@ func (r *filmeRepositoryImpl) Create(filme *model.Filme) error {
 	})
 }
 
-func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error) {
+func (r *filmeRepositoryImpl) Update(filme *model.Filme) (*model.Filme, error) {
 	var (
 		err       error
 		listReOld []model.ReFilmeGenero
@@ -106,27 +107,34 @@ func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]
 		oldReMap[re.IdGenero] = re
 	}
 
-	for _, re := range filme.Generos {
-		if _, exists := oldReMap[re.Id]; !exists {
+	for _, genero := range filme.Generos {
+		if _, exists := oldReMap[genero.Id]; !exists {
 			listReAdd = append(listReAdd, model.ReFilmeGenero{
 				IdFilme:  filme.Id,
-				IdGenero: re.Id,
+				IdGenero: genero.Id,
 			})
 		}
 	}
 
-	newReMap := make(map[uuid.UUID]model.ReFilmeGenero)
-	for _, re := range filme.Generos {
-		newReMap[re.Id] = model.ReFilmeGenero{
-			IdFilme:  filme.Id,
-			IdGenero: re.Id,
-		}
+	newGenMap := make(map[uuid.UUID]modelGen.Genero)
+	for _, genero := range filme.Generos {
+		newGenMap[genero.Id] = genero
 	}
 
 	for _, re := range listReOld {
-		if _, exists := newReMap[re.IdGenero]; !exists {
+		if _, exists := newGenMap[re.IdGenero]; !exists {
 			listReRem = append(listReRem, re)
 		}
+	}
+
+	updateItems := map[string]interface{}{
+		"titulo":         filme.Titulo,
+		"sinopse":        filme.Sinopse,
+		"diretor":        filme.Diretor,
+		"duracao":        filme.Duracao,
+		"ano_lancamento": filme.AnoLancamento,
+		"classificacao":  filme.Classificacao,
+		"nota":           filme.Nota,
 	}
 
 	err = r.db.Transaction(func(tx *gorm.DB) error {
@@ -139,13 +147,12 @@ func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]
 		}
 
 		for _, re := range listReAdd {
-			if err = tx.Create(&re).Error; err != nil {
+			if err = tx.Model(&model.ReFilmeGenero{}).Create(&re).Error; err != nil {
 				return err
 			}
 		}
 
 		for _, re := range listReRem {
-			// Dando panico na linha abaixo
 			if err = tx.Delete(&model.ReFilmeGenero{}, "id = ?", re.Id).Error; err != nil {
 				return err
 			}

@@ -8,7 +8,6 @@ import (
 	"cinema_digital_go/api/pkg/global/erros"
 	"cinema_digital_go/api/pkg/middleware"
 	"cinema_digital_go/api/pkg/utils"
-	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -83,36 +82,20 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	fOld, err := repository.NewFilmeRepository(dbConection.DB).FindById(*id)
-	if err != nil {
-		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Filme não encontrado"), nil))
-		return
-	}
-
 	var f model.Filme
 	if err = ginctx.ShouldBindJSON(&f); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	updateItems := map[string]interface{}{
-		"titulo":              f.Titulo,
-		"sinopse":             f.Sinopse,
-		"diretor":             f.Diretor,
-		"duracao":             f.Duracao,
-		"ano_lancamento":      f.AnoLancamento,
-		"classificacao":       f.Classificacao,
-		"nota":                f.Nota,
-		"id_usuario_registro": usuarioLogado.Id,
-	}
-
-	fOld, err = repository.NewFilmeRepository(dbConection.DB).Update(fOld, updateItems)
+	f.Id = *id
+	filme, err := repository.NewFilmeRepository(dbConection.DB).Update(&f)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, fOld))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, filme))
 }
 
 func Deletar(ginctx *gin.Context) {
