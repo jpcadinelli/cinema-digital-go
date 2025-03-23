@@ -7,9 +7,9 @@ import (
 )
 
 type ReFilmeGenero struct {
-	Id       uuid.UUID `json:"id"`
-	IdFilme  uuid.UUID `json:"idFilme"`
-	IdGenero uuid.UUID `json:"idGenero"`
+	Id       uuid.UUID `json:"id" gorm:"primary_key;type:uuid;default:uuid_generate_v4()"`
+	IdFilme  uuid.UUID `json:"idFilme" gorm:"not null"`
+	IdGenero uuid.UUID `json:"idGenero" gorm:"not null"`
 }
 
 func (rfg *ReFilmeGenero) BeforeCreate(_ *gorm.DB) (err error) {

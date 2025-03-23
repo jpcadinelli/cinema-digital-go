@@ -110,6 +110,7 @@ func (r *filmeRepositoryImpl) Update(filme *model.Filme) (*model.Filme, error) {
 	for _, genero := range filme.Generos {
 		if _, exists := oldReMap[genero.Id]; !exists {
 			listReAdd = append(listReAdd, model.ReFilmeGenero{
+				Id:       uuid.New(),
 				IdFilme:  filme.Id,
 				IdGenero: genero.Id,
 			})
@@ -137,19 +138,22 @@ func (r *filmeRepositoryImpl) Update(filme *model.Filme) (*model.Filme, error) {
 		"nota":           filme.Nota,
 	}
 
+	txDB := r.db.First(filme, "id = ?", filme.Id)
+	if txDB.Error != nil {
+		return nil, txDB.Error
+	}
+	if txDB.RowsAffected == 0 {
+		return nil, erros.ErrFilmeNaoEncontrado
+	}
+
 	err = r.db.Transaction(func(tx *gorm.DB) error {
-		tx = tx.Model(filme).Updates(updateItems)
-		if tx.Error != nil {
-			return tx.Error
-		}
-		if tx.RowsAffected == 0 {
-			return erros.ErrFilmeNaoEncontrado
+
+		if err = tx.Model(&model.Filme{}).Where("id = ?", filme.Id).Updates(updateItems).Error; err != nil {
+			return err
 		}
 
-		for _, re := range listReAdd {
-			if err = tx.Model(&model.ReFilmeGenero{}).Create(&re).Error; err != nil {
-				return err
-			}
+		if err = tx.Create(&listReAdd).Error; err != nil {
+			return err
 		}
 
 		for _, re := range listReRem {
