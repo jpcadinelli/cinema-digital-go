@@ -152,8 +152,10 @@ func (r *filmeRepositoryImpl) Update(filme *model.Filme) (*model.Filme, error) {
 			return err
 		}
 
-		if err = tx.Create(&listReAdd).Error; err != nil {
-			return err
+		if len(listReAdd) > 0 {
+			if err = tx.Create(&listReAdd).Error; err != nil {
+				return err
+			}
 		}
 
 		for _, re := range listReRem {
