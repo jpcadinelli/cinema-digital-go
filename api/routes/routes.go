@@ -35,6 +35,10 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			generoRoutes(generoGroup)
 		}
+		sessaoGroup := main.Group("/sessoes", middleware.Auth())
+		{
+			sessaoRoutes(sessaoGroup)
+		}
 	}
 
 	return router
