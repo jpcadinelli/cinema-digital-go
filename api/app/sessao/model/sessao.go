@@ -14,12 +14,12 @@ type Sessao struct {
 	IdSala          uuid.UUID `json:"idSala"`
 	DataInicio      time.Time `json:"dataInicio"`
 	DataFim         time.Time `json:"dataFim"`
-	PrecoIngresso   float64   `json:"precoIngresson"`
+	PrecoIngresso   float64   `json:"precoIngresso"`
 	Disponibilidade int       `json:"disponibilidade"`
 }
 
 func (s *Sessao) TableName() string {
-	return global.TabelaFilme
+	return global.TabelaSessao
 }
 
 func (s *Sessao) BeforeCreate(_ *gorm.DB) (err error) {
