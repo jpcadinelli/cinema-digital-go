@@ -6,4 +6,5 @@ const (
 	TabelaPermissaoUsuario = "permissao_usuario"
 	TabelaFilme            = "filme"
 	TabelaGenero           = "genero"
+	TabelaReFilmeGenero    = "re_filme_genero"
 )

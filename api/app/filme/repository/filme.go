@@ -2,6 +2,7 @@ package repository
 
 import (
 	"cinema_digital_go/api/app/filme/model"
+	modelGen "cinema_digital_go/api/app/genero/model"
 	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -11,7 +12,7 @@ type FilmeRepository interface {
 	FindById(id uuid.UUID, preloads ...string) (*model.Filme, error)
 	FindAll(preloads ...string) ([]model.Filme, error)
 	Create(filme *model.Filme) error
-	Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error)
+	Update(filme *model.Filme) (*model.Filme, error)
 	Delete(id uuid.UUID) error
 }
 
@@ -66,19 +67,107 @@ func (r *filmeRepositoryImpl) FindAll(preloads ...string) ([]model.Filme, error)
 }
 
 func (r *filmeRepositoryImpl) Create(filme *model.Filme) error {
-	return r.db.Create(filme).Error
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		f := filme.GetOnlyFilme()
+		if err := tx.Create(f).Error; err != nil {
+			return err
+		}
+
+		filme.Id = f.Id
+
+		var listRe []model.ReFilmeGenero
+		for _, re := range filme.Generos {
+			listRe = append(listRe, model.ReFilmeGenero{
+				IdFilme:  f.Id,
+				IdGenero: re.Id,
+			})
+		}
+		if err := tx.Create(&listRe).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
 }
 
-func (r *filmeRepositoryImpl) Update(filme *model.Filme, updateItems map[string]interface{}) (*model.Filme, error) {
-	tx := r.db.Model(filme).Updates(updateItems)
-	if tx.Error != nil {
-		return nil, tx.Error
+func (r *filmeRepositoryImpl) Update(filme *model.Filme) (*model.Filme, error) {
+	var (
+		err       error
+		listReOld []model.ReFilmeGenero
+		listReAdd []model.ReFilmeGenero
+		listReRem []model.ReFilmeGenero
+	)
+
+	if err = r.db.Model(model.ReFilmeGenero{}).Where("id_filme = ?", filme.Id).Find(&listReOld).Error; err != nil {
+		return nil, err
 	}
-	if tx.RowsAffected == 0 {
+
+	oldReMap := make(map[uuid.UUID]model.ReFilmeGenero)
+	for _, re := range listReOld {
+		oldReMap[re.IdGenero] = re
+	}
+
+	for _, genero := range filme.Generos {
+		if _, exists := oldReMap[genero.Id]; !exists {
+			listReAdd = append(listReAdd, model.ReFilmeGenero{
+				Id:       uuid.New(),
+				IdFilme:  filme.Id,
+				IdGenero: genero.Id,
+			})
+		}
+	}
+
+	newGenMap := make(map[uuid.UUID]modelGen.Genero)
+	for _, genero := range filme.Generos {
+		newGenMap[genero.Id] = genero
+	}
+
+	for _, re := range listReOld {
+		if _, exists := newGenMap[re.IdGenero]; !exists {
+			listReRem = append(listReRem, re)
+		}
+	}
+
+	updateItems := map[string]interface{}{
+		"titulo":         filme.Titulo,
+		"sinopse":        filme.Sinopse,
+		"diretor":        filme.Diretor,
+		"duracao":        filme.Duracao,
+		"ano_lancamento": filme.AnoLancamento,
+		"classificacao":  filme.Classificacao,
+		"nota":           filme.Nota,
+	}
+
+	txDB := r.db.First(filme, "id = ?", filme.Id)
+	if txDB.Error != nil {
+		return nil, txDB.Error
+	}
+	if txDB.RowsAffected == 0 {
 		return nil, erros.ErrFilmeNaoEncontrado
 	}
 
-	return filme, nil
+	err = r.db.Transaction(func(tx *gorm.DB) error {
+
+		if err = tx.Model(&model.Filme{}).Where("id = ?", filme.Id).Updates(updateItems).Error; err != nil {
+			return err
+		}
+
+		if len(listReAdd) > 0 {
+			if err = tx.Create(&listReAdd).Error; err != nil {
+				return err
+			}
+		}
+
+		for _, re := range listReRem {
+			if err = tx.Delete(&model.ReFilmeGenero{}, "id = ?", re.Id).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	return filme, err
 }
 
 func (r *filmeRepositoryImpl) Delete(id uuid.UUID) error {
