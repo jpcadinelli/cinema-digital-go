@@ -66,4 +66,11 @@ const (
 	PermissaoGeneroDropdown   = "GENERO_DROPDOWN"
 	PermissaoGeneroAtualizar  = "GENERO_ATUALIZAR"
 	PermissaoGeneroDeletar    = "GENERO_DELETAR"
+
+	PermissaoSessaoCriar      = "SESSAO_CRIAR"
+	PermissaoSessaoVisualizar = "SESSAO_VISUALIZAR"
+	PermissaoSessaoListar     = "SESSAO_LISTAR"
+	PermissaoSessaoDropdown   = "SESSAO_DROPDOWN"
+	PermissaoSessaoAtualizar  = "SESSAO_ATUALIZAR"
+	PermissaoSessaoDeletar    = "SESSAO_DELETAR"
 )
