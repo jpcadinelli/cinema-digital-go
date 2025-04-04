@@ -1,8 +1,8 @@
 package resource
 
 import (
-	"cinema_digital_go/api/app/genero/model"
-	"cinema_digital_go/api/app/genero/repository"
+	"cinema_digital_go/api/app/sala/model"
+	"cinema_digital_go/api/app/sala/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
@@ -20,28 +20,28 @@ func Criar(ginctx *gin.Context) {
 		return
 	}
 
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroCriar) {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSalaCriar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
 
-	var g model.Genero
-	if err = ginctx.ShouldBindJSON(&g); err != nil {
+	var s model.Sala
+	if err = ginctx.ShouldBindJSON(&s); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	if g.Nome == "" {
-		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrGeneroInvalido, nil))
+	if s.Nome == "" {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrSalaInvalida, nil))
 		return
 	}
 
-	if err = repository.NewGeneroRepository(dbConection.DB).Create(&g); err != nil {
+	if err = repository.NewSalaRepository(dbConection.DB).Create(&s); err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusCreated, middleware.NewResponseBridge(nil, g))
+	ginctx.JSON(http.StatusCreated, middleware.NewResponseBridge(nil, s))
 }
 
 func Visualizar(ginctx *gin.Context) {
@@ -51,7 +51,7 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroVisualizar) {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSalaVisualizar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
@@ -62,13 +62,13 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	g, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
+	s, err := repository.NewSalaRepository(dbConection.DB).FindById(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, g))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, s))
 }
 
 func Atualizar(ginctx *gin.Context) {
@@ -88,27 +88,27 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	gOld, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
+	sOld, err := repository.NewSalaRepository(dbConection.DB).FindById(*id)
 	if err != nil {
-		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Genero não encontrado"), nil))
+		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Sala não encontrado"), nil))
 		return
 	}
 
-	var g model.Genero
-	if err = ginctx.ShouldBindJSON(&g); err != nil {
+	var s model.Sala
+	if err = ginctx.ShouldBindJSON(&s); err != nil {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	updateItems := utils.GerarCamposAtualizacao(&g)
+	updateItems := utils.GerarCamposAtualizacao(&s)
 
-	gOld, err = repository.NewGeneroRepository(dbConection.DB).Update(gOld, updateItems)
+	sOld, err = repository.NewSalaRepository(dbConection.DB).Update(sOld, updateItems)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, gOld))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, sOld))
 }
 
 func Deletar(ginctx *gin.Context) {
@@ -128,7 +128,7 @@ func Deletar(ginctx *gin.Context) {
 		return
 	}
 
-	err = repository.NewGeneroRepository(dbConection.DB).Delete(*id)
+	err = repository.NewSalaRepository(dbConection.DB).Delete(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return

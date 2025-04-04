@@ -4,6 +4,7 @@ import (
 	"cinema_digital_go/api/app/dropdown/model"
 	generoRepository "cinema_digital_go/api/app/genero/repository"
 	permissaoRepository "cinema_digital_go/api/app/permissao/repository"
+	SalaRepository "cinema_digital_go/api/app/sala/repository"
 	usuarioRepository "cinema_digital_go/api/app/usuario/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
@@ -87,6 +88,32 @@ func DropdownGeneros(ginctx *gin.Context) {
 	response := []*model.DropdownUUID{}
 	for _, g := range generos {
 		response = append(response, g.GeneroToDropdownUUID())
+	}
+
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, response))
+}
+
+func DropdownSalas(ginctx *gin.Context) {
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSalaDropdown) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+		return
+	}
+
+	salas, err := SalaRepository.NewSalaRepository(dbConection.DB).FindAll()
+	if err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	response := []*model.DropdownUUID{}
+	for _, s := range salas {
+		response = append(response, s.SalaToDropdownUUID())
 	}
 
 	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, response))
