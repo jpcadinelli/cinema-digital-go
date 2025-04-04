@@ -88,7 +88,7 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	fOld, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
+	gOld, err := repository.NewGeneroRepository(dbConection.DB).FindById(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Genero não encontrado"), nil))
 		return
@@ -102,13 +102,13 @@ func Atualizar(ginctx *gin.Context) {
 
 	updateItems := utils.GerarCamposAtualizacao(&g)
 
-	fOld, err = repository.NewGeneroRepository(dbConection.DB).Update(fOld, updateItems)
+	gOld, err = repository.NewGeneroRepository(dbConection.DB).Update(gOld, updateItems)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, fOld))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, gOld))
 }
 
 func Deletar(ginctx *gin.Context) {

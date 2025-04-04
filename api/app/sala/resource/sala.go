@@ -88,7 +88,7 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	fOld, err := repository.NewSalaRepository(dbConection.DB).FindById(*id)
+	sOld, err := repository.NewSalaRepository(dbConection.DB).FindById(*id)
 	if err != nil {
 		ginctx.JSON(http.StatusNotFound, middleware.NewResponseBridge(errors.New("Sala não encontrado"), nil))
 		return
@@ -102,13 +102,13 @@ func Atualizar(ginctx *gin.Context) {
 
 	updateItems := utils.GerarCamposAtualizacao(&s)
 
-	fOld, err = repository.NewSalaRepository(dbConection.DB).Update(fOld, updateItems)
+	sOld, err = repository.NewSalaRepository(dbConection.DB).Update(sOld, updateItems)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, fOld))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, sOld))
 }
 
 func Deletar(ginctx *gin.Context) {
