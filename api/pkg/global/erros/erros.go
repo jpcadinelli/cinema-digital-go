@@ -24,4 +24,7 @@ var (
 
 	ErrGeneroNaoEncontrado = fmt.Errorf("gênero não encontrado")
 	ErrGeneroInvalido      = fmt.Errorf("nome de gênero inválido")
+
+	ErrSalaNaoEncontrada = fmt.Errorf("sala não encontrada")
+	ErrSalaInvalida      = fmt.Errorf("nome de sala inválido")
 )

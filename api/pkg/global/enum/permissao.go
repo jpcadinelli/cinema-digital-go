@@ -30,6 +30,13 @@ var (
 		PermissaoGeneroDropdown,
 		PermissaoGeneroAtualizar,
 		PermissaoGeneroDeletar,
+
+		PermissaoSalaCriar,
+		PermissaoSalaVisualizar,
+		PermissaoSalaListar,
+		PermissaoSalaDropdown,
+		PermissaoSalaAtualizar,
+		PermissaoSalaDeletar,
 	}
 	GrupoN1Permissoes = []string{
 		PermissaoUsuarioVisualizar,
@@ -66,4 +73,11 @@ const (
 	PermissaoGeneroDropdown   = "GENERO_DROPDOWN"
 	PermissaoGeneroAtualizar  = "GENERO_ATUALIZAR"
 	PermissaoGeneroDeletar    = "GENERO_DELETAR"
+
+	PermissaoSalaCriar      = "SALA_CRIAR"
+	PermissaoSalaVisualizar = "SALA_VISUALIZAR"
+	PermissaoSalaListar     = "SALA_LISTAR"
+	PermissaoSalaDropdown   = "SALA_DROPDOWN"
+	PermissaoSalaAtualizar  = "SALA_ATUALIZAR"
+	PermissaoSalaDeletar    = "SALA_DELETAR"
 )
