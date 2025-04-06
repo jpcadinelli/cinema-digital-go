@@ -64,6 +64,11 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
+	if usuarioLogado.Id != u.Id {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrNaoPodeVisualizarDadosDeOutroUsuario, nil))
+		return
+	}
+
 	userResponse := u.UsuarioToDTOResponse()
 	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, userResponse))
 }

@@ -13,9 +13,10 @@ var (
 )
 
 var (
-	ErrUsuarioNaoEncontrado              = fmt.Errorf("usuário não encontrado")
-	ErrCredenciaisInvalidas              = fmt.Errorf("credenciais inválidas do usuário")
-	ErrNaoPodeMudadarDadosDeOutroUsuario = fmt.Errorf("seu usuário não tem permissão de mudar os dados de outro usuário")
+	ErrUsuarioNaoEncontrado                 = fmt.Errorf("usuário não encontrado")
+	ErrCredenciaisInvalidas                 = fmt.Errorf("credenciais inválidas do usuário")
+	ErrNaoPodeMudadarDadosDeOutroUsuario    = fmt.Errorf("seu usuário não tem permissão de mudar os dados de outro usuário")
+	ErrNaoPodeVisualizarDadosDeOutroUsuario = fmt.Errorf("seu usuário não tem permissão de visualizar os dados de outro usuário")
 
 	ErrPermissaoNaoEncontrada          = fmt.Errorf("permissão não encontrada")
 	ErrGrupoDePermissoesNaoEncontradas = fmt.Errorf("grupo de permissões não encontradas")
