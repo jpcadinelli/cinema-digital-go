@@ -78,7 +78,7 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroAtualizar) {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSalaAtualizar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
@@ -118,7 +118,7 @@ func Deletar(ginctx *gin.Context) {
 		return
 	}
 
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoGeneroDeletar) {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSalaDeletar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
