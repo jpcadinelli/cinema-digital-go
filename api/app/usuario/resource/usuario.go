@@ -64,7 +64,7 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	if usuarioLogado.Id != u.Id {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado) && usuarioLogado.Id != u.Id {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrNaoPodeVisualizarDadosDeOutroUsuario, nil))
 		return
 	}
@@ -118,7 +118,7 @@ func Atualizar(ginctx *gin.Context) {
 		return
 	}
 
-	if usuarioLogado.Id != u.Id {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado) && usuarioLogado.Id != u.Id {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(erros.ErrNaoPodeMudadarDadosDeOutroUsuario, nil))
 		return
 	}
