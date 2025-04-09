@@ -138,11 +138,11 @@ func Deletar(ginctx *gin.Context) {
 }
 
 func Listar(ginctx *gin.Context) {
-	filmes, err := repository.NewSessaoRepository(dbConection.DB).FindAll()
+	sessoes, err := repository.NewSessaoRepository(dbConection.DB).FindAll()
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, filmes))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, sessoes))
 }
