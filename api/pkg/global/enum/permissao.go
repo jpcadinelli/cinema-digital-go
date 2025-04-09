@@ -76,4 +76,11 @@ const (
 	PermissaoSalaDropdown   = "SALA_DROPDOWN"
 	PermissaoSalaAtualizar  = "SALA_ATUALIZAR"
 	PermissaoSalaDeletar    = "SALA_DELETAR"
+
+	PermissaoSessaoCriar      = "SESSAO_CRIAR"
+	PermissaoSessaoVisualizar = "SESSAO_VISUALIZAR"
+	PermissaoSessaoListar     = "SESSAO_LISTAR"
+	PermissaoSessaoDropdown   = "SESSAO_DROPDOWN"
+	PermissaoSessaoAtualizar  = "SESSAO_ATUALIZAR"
+	PermissaoSessaoDeletar    = "SESSAO_DELETAR"
 )

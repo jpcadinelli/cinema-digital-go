@@ -8,4 +8,5 @@ const (
 	TabelaGenero           = "genero"
 	TabelaReFilmeGenero    = "re_filme_genero"
 	TabelaSala             = "sala"
+	TabelaSessao           = "sessao"
 )
