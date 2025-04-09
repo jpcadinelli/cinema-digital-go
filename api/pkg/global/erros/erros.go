@@ -28,4 +28,6 @@ var (
 
 	ErrSalaNaoEncontrada = fmt.Errorf("sala não encontrada")
 	ErrSalaInvalida      = fmt.Errorf("nome de sala inválido")
+
+	ErrSessaoNaoEncontrada = fmt.Errorf("sessao não encontrada")
 )
