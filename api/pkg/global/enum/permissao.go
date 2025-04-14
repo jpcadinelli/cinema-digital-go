@@ -35,6 +35,8 @@ var (
 		PermissaoSalaDropdown,
 		PermissaoSalaAtualizar,
 		PermissaoSalaDeletar,
+
+		PermissaoTenisCriar,
 	}
 	GrupoN1Permissoes = []string{
 		PermissaoUsuarioVisualizar,
@@ -83,4 +85,6 @@ const (
 	PermissaoSessaoDropdown   = "SESSAO_DROPDOWN"
 	PermissaoSessaoAtualizar  = "SESSAO_ATUALIZAR"
 	PermissaoSessaoDeletar    = "SESSAO_DELETAR"
+
+	PermissaoTenisCriar = "TENIS_CRIAR"
 )
