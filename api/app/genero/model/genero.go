@@ -12,7 +12,7 @@ import (
 type Genero struct {
 	Id        uuid.UUID `json:"id"`
 	Nome      string    `json:"nome" gorm:"unique;not null"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 func (g *Genero) BeforeCreate(_ *gorm.DB) (err error) {
