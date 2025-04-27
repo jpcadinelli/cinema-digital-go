@@ -3,7 +3,7 @@ package resource
 import (
 	"cinema_digital_go/api/app/filme/model"
 	"cinema_digital_go/api/app/filme/repository"
-	"cinema_digital_go/api/app/paginacao/resource"
+	paginacaoRepo "cinema_digital_go/api/app/paginacao/repository"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
@@ -71,16 +71,13 @@ func Listar(ginctx *gin.Context) {
 	var filmes []model.Filme
 	query := dbConection.DB.Model(&model.Filme{}).Preload("Generos")
 
-	meta, err := resource.PaginarConsulta(ginctx, query, &filmes)
+	paginacao, err := paginacaoRepo.ConsultaPaginada(ginctx, query, &filmes)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, gin.H{
-		"meta": meta,
-		"data": filmes,
-	})
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, paginacao))
 }
 
 func Atualizar(ginctx *gin.Context) {
