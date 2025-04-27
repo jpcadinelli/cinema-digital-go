@@ -1,4 +1,4 @@
-package resource
+package repository
 
 import (
 	"cinema_digital_go/api/app/paginacao/model"
@@ -9,31 +9,32 @@ import (
 	"strconv"
 )
 
-func PaginarConsulta[P any](ginctx *gin.Context, query *gorm.DB, out *[]P) (model.Paginacao, error) {
+func ConsultaPaginada[P any](ginctx *gin.Context, query *gorm.DB, baseModel *[]P) (*model.Paginacao, error) {
 	pagina, limite, offset, err := getPaginationParams(ginctx)
 	if err != nil {
-		return model.Paginacao{}, err
+		return nil, err
 	}
 
 	var totalItens int64
 	if err = query.Count(&totalItens).Error; err != nil {
-		return model.Paginacao{}, err
+		return nil, err
 	}
 
-	if err = query.Offset(offset).Limit(limite).Find(out).Error; err != nil {
-		return model.Paginacao{}, err
+	if err = query.Offset(offset).Limit(limite).Find(baseModel).Error; err != nil {
+		return nil, err
 	}
 
 	totalPaginas := int(math.Ceil(float64(totalItens) / float64(limite)))
 
-	meta := model.Paginacao{
+	paginacao := &model.Paginacao{
+		Conteudo:     baseModel,
 		TotalItens:   int(totalItens),
 		Limite:       limite,
 		PaginaAtual:  pagina,
 		TotalPaginas: totalPaginas,
 	}
 
-	return meta, nil
+	return paginacao, nil
 }
 
 func getPaginationParams(ginctx *gin.Context) (int, int, int, error) {
