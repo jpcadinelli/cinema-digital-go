@@ -9,8 +9,8 @@ import (
 	"strconv"
 )
 
-func PaginarConsulta[P any](c *gin.Context, query *gorm.DB, out *[]P) (model.Paginacao, error) {
-	pagina, limite, offset, err := getPaginationParams(c)
+func PaginarConsulta[P any](ginctx *gin.Context, query *gorm.DB, out *[]P) (model.Paginacao, error) {
+	pagina, limite, offset, err := getPaginationParams(ginctx)
 	if err != nil {
 		return model.Paginacao{}, err
 	}
@@ -36,9 +36,9 @@ func PaginarConsulta[P any](c *gin.Context, query *gorm.DB, out *[]P) (model.Pag
 	return meta, nil
 }
 
-func getPaginationParams(c *gin.Context) (int, int, int, error) {
-	paginaStr := c.DefaultQuery("pagina", "1")
-	limiteStr := c.DefaultQuery("limite", "10")
+func getPaginationParams(ginctx *gin.Context) (int, int, int, error) {
+	paginaStr := ginctx.DefaultQuery("pagina", "1")
+	limiteStr := ginctx.DefaultQuery("limite", "10")
 
 	pagina, err := strconv.Atoi(paginaStr)
 	if err != nil || pagina < 1 {
