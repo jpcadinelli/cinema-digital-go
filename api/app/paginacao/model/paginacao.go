@@ -1,8 +1,8 @@
 package model
 
 type PaginacaoModel struct {
-	TotalItens   int `json:"total_itens"`
+	TotalItens   int `json:"totalItens"`
 	Limite       int `json:"limite"`
-	PaginaAtual  int `json:"pagina_atual"`
-	TotalPaginas int `json:"total_paginas"`
+	PaginaAtual  int `json:"paginaAtual"`
+	TotalPaginas int `json:"totalPaginas"`
 }

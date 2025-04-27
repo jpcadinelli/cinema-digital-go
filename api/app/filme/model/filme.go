@@ -14,13 +14,13 @@ type Filme struct {
 	Sinopse           string            `json:"sinopse"`
 	Diretor           string            `json:"diretor"`
 	Duracao           uint              `json:"duracao"`
-	AnoLancamento     time.Time         `json:"ano_lancamento"`
+	AnoLancamento     time.Time         `json:"anoLancamento"`
 	Classificacao     uint              `json:"classificacao"`
 	Nota              float64           `json:"nota"`
 	Criado            time.Time         `json:"criado"`
 	Atualizado        time.Time         `json:"atualizado"`
 	Excluido          *gorm.DeletedAt   `json:"excluido"`
-	IdUsuarioRegistro uuid.UUID         `json:"id_usuario_registro"`
+	IdUsuarioRegistro uuid.UUID         `json:"idUsuarioRegistro"`
 	Generos           []modelGen.Genero `json:"generos" gorm:"many2many:re_filme_genero;foreignKey:id;References:id;re_filme_genero;joinForeignKey:id_filme;joinReferences:id_genero"`
 }
 
