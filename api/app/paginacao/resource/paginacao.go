@@ -9,28 +9,28 @@ import (
 	"strconv"
 )
 
-func PaginarConsulta[P any](c *gin.Context, query *gorm.DB, out *[]P) (model.PaginacaoModel, error) {
+func PaginarConsulta[P any](c *gin.Context, query *gorm.DB, out *[]P) (model.Paginacao, error) {
 	pagina, limite, offset, err := getPaginationParams(c)
 	if err != nil {
-		return model.PaginacaoModel{}, err
+		return model.Paginacao{}, err
 	}
 
-	var total_itens int64
-	if err := query.Count(&total_itens).Error; err != nil {
-		return model.PaginacaoModel{}, err
+	var totalItens int64
+	if err = query.Count(&totalItens).Error; err != nil {
+		return model.Paginacao{}, err
 	}
 
-	if err := query.Offset(offset).Limit(limite).Find(out).Error; err != nil {
-		return model.PaginacaoModel{}, err
+	if err = query.Offset(offset).Limit(limite).Find(out).Error; err != nil {
+		return model.Paginacao{}, err
 	}
 
-	total_paginas := int(math.Ceil(float64(total_itens) / float64(limite)))
+	totalPaginas := int(math.Ceil(float64(totalItens) / float64(limite)))
 
-	meta := model.PaginacaoModel{
-		TotalItens:   int(total_itens),
+	meta := model.Paginacao{
+		TotalItens:   int(totalItens),
 		Limite:       limite,
 		PaginaAtual:  pagina,
-		TotalPaginas: total_paginas,
+		TotalPaginas: totalPaginas,
 	}
 
 	return meta, nil

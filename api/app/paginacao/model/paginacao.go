@@ -1,6 +1,6 @@
 package model
 
-type PaginacaoModel struct {
+type Paginacao struct {
 	TotalItens   int `json:"totalItens"`
 	Limite       int `json:"limite"`
 	PaginaAtual  int `json:"paginaAtual"`
