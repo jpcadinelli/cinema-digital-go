@@ -29,7 +29,7 @@ func ConsultaPaginada[P any](ginctx *gin.Context, query *gorm.DB, baseModel *[]P
 	paginacao := &model.Paginacao{
 		Conteudo:     baseModel,
 		TotalItens:   int(totalItens),
-		Limite:       limite,
+		LimiteItens:  limite,
 		PaginaAtual:  pagina,
 		TotalPaginas: totalPaginas,
 	}
