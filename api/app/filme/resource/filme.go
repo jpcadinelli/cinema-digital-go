@@ -3,6 +3,7 @@ package resource
 import (
 	"cinema_digital_go/api/app/filme/model"
 	"cinema_digital_go/api/app/filme/repository"
+	"cinema_digital_go/api/app/paginacao/resource"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
@@ -56,13 +57,30 @@ func Visualizar(ginctx *gin.Context) {
 }
 
 func Listar(ginctx *gin.Context) {
-	filmes, err := repository.NewFilmeRepository(dbConection.DB).FindAll("Generos")
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoFilmeListar) {
+		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
+		return
+	}
+
+	var filmes []model.Filme
+	query := dbConection.DB.Model(&model.Filme{}).Preload("Generos")
+
+	meta, err := resource.PaginarConsulta(ginctx, query, &filmes)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, filmes))
+	ginctx.JSON(http.StatusOK, gin.H{
+		"meta": meta,
+		"data": filmes,
+	})
 }
 
 func Atualizar(ginctx *gin.Context) {

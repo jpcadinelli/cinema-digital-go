@@ -23,6 +23,7 @@ var (
 		PermissaoFilmeCriar,
 		PermissaoFilmeAtualizar,
 		PermissaoFilmeDeletar,
+		PermissaoFilmeListar,
 
 		PermissaoGeneroCriar,
 		PermissaoGeneroVisualizar,
@@ -64,6 +65,7 @@ const (
 	PermissaoFilmeCriar     = "FILME_CRIAR"
 	PermissaoFilmeAtualizar = "FILME_ATUALIZAR"
 	PermissaoFilmeDeletar   = "FILME_DELETAR"
+	PermissaoFilmeListar    = "FILME_LISTAR"
 
 	PermissaoGeneroCriar      = "GENERO_CRIAR"
 	PermissaoGeneroVisualizar = "GENERO_VISUALIZAR"
