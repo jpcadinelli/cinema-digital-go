@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	route         = "/"
+	route         = ""
 	routeId       = "/:id"
 	routeFiltro   = "/filtro"
 	routeDropdown = "/dropdown"
