@@ -67,13 +67,13 @@ func Listar(ginctx *gin.Context) {
 		return
 	}
 
-	paginacao, err := repository.NewFilmeRepository(dbConection.DB).Paginacao(ginctx)
+	listaPaginada, err := repository.NewFilmeRepository(dbConection.DB).List(ginctx)
 	if err != nil {
 		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
 		return
 	}
 
-	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, paginacao))
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, listaPaginada))
 }
 
 func Atualizar(ginctx *gin.Context) {
