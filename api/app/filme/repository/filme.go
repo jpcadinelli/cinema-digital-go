@@ -3,7 +3,10 @@ package repository
 import (
 	"cinema_digital_go/api/app/filme/model"
 	modelGen "cinema_digital_go/api/app/genero/model"
+	modelPag "cinema_digital_go/api/app/paginacao/model"
+	"cinema_digital_go/api/app/paginacao/repository"
 	"cinema_digital_go/api/pkg/global/erros"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -14,6 +17,7 @@ type FilmeRepository interface {
 	Create(filme *model.Filme) error
 	Update(filme *model.Filme) (*model.Filme, error)
 	Delete(id uuid.UUID) error
+	List(ginctx *gin.Context) (*modelPag.Paginacao, error)
 }
 
 type filmeRepositoryImpl struct {
@@ -177,4 +181,11 @@ func (r *filmeRepositoryImpl) Delete(id uuid.UUID) error {
 		}
 		return nil
 	})
+}
+
+func (r *filmeRepositoryImpl) List(ginctx *gin.Context) (*modelPag.Paginacao, error) {
+	query := r.db.Model(&model.Filme{}).Preload("Generos")
+
+	var filmes []model.Filme
+	return repository.ConsultaPaginada(ginctx, query, &filmes)
 }
