@@ -17,7 +17,7 @@ type FilmeRepository interface {
 	Create(filme *model.Filme) error
 	Update(filme *model.Filme) (*model.Filme, error)
 	Delete(id uuid.UUID) error
-	Paginacao(ginctx *gin.Context) (*modelPag.Paginacao, error)
+	List(ginctx *gin.Context) (*modelPag.Paginacao, error)
 }
 
 type filmeRepositoryImpl struct {
@@ -183,7 +183,7 @@ func (r *filmeRepositoryImpl) Delete(id uuid.UUID) error {
 	})
 }
 
-func (r *filmeRepositoryImpl) Paginacao(ginctx *gin.Context) (*modelPag.Paginacao, error) {
+func (r *filmeRepositoryImpl) List(ginctx *gin.Context) (*modelPag.Paginacao, error) {
 	query := r.db.Model(&model.Filme{}).Preload("Generos")
 
 	var filmes []model.Filme
