@@ -134,3 +134,13 @@ func Deletar(ginctx *gin.Context) {
 
 	ginctx.JSON(http.StatusNoContent, middleware.NewResponseBridge(nil, nil))
 }
+
+func EmCartaz(ginctx *gin.Context) {
+	filmes, err := repository.NewFilmeRepository(dbConection.DB).GetEmCartaz()
+	if err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+		return
+	}
+
+	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, filmes))
+}
