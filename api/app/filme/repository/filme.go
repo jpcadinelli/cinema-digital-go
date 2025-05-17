@@ -5,6 +5,7 @@ import (
 	modelGen "cinema_digital_go/api/app/genero/model"
 	modelPag "cinema_digital_go/api/app/paginacao/model"
 	"cinema_digital_go/api/app/paginacao/repository"
+	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -18,6 +19,7 @@ type FilmeRepository interface {
 	Update(filme *model.Filme) (*model.Filme, error)
 	Delete(id uuid.UUID) error
 	List(ginctx *gin.Context) (*modelPag.Paginacao, error)
+	GetEmCartaz() ([]model.Filme, error)
 }
 
 type filmeRepositoryImpl struct {
@@ -188,4 +190,22 @@ func (r *filmeRepositoryImpl) List(ginctx *gin.Context) (*modelPag.Paginacao, er
 
 	var filmes []model.Filme
 	return repository.ConsultaPaginada(ginctx, query, &filmes)
+}
+
+func (r *filmeRepositoryImpl) GetEmCartaz() ([]model.Filme, error) {
+	var filmes []model.Filme
+
+	tx := r.db.
+		Preload("Generos").
+		Joins("JOIN sessao ON sessao.id_filme = filme.id").
+		Where("sessao.disponibilidade = ?", enum.SessaoDisponivel).
+		Find(&filmes)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return filmes, erros.ErrFilmeNaoEncontrado
+	}
+
+	return filmes, nil
 }
