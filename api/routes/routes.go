@@ -43,6 +43,10 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			sessaoRoutes(sessaoGroup)
 		}
+		ingressoGroup := main.Group("/ingressos", middleware.Auth())
+		{
+			ingressoRoutes(ingressoGroup)
+		}
 	}
 
 	return router
