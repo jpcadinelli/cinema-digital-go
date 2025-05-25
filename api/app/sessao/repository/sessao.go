@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"cinema_digital_go/api/app/ingresso/repository"
 	"cinema_digital_go/api/app/sessao/model"
 	"cinema_digital_go/api/pkg/global/enum"
 	"cinema_digital_go/api/pkg/global/erros"
@@ -43,7 +44,10 @@ func (r *sessaoRepositoryImpl) FindById(id uuid.UUID) (*model.Sessao, error) {
 		return nil, erros.ErrSessaoNaoEncontrada
 	}
 
-	return &sessao, nil
+	var err error
+	sessao.PoltronasDisponiveis, err = repository.NewIngressoRepository(r.db).ListarPoltronasDisponiveis(sessao, sessao.Sala)
+
+	return &sessao, err
 }
 
 func (r *sessaoRepositoryImpl) FindAll(preloads ...string) ([]model.Sessao, error) {
