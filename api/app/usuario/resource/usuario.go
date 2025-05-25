@@ -1,6 +1,7 @@
 package resource
 
 import (
+	ingressoRepository "cinema_digital_go/api/app/ingresso/repository"
 	permissaoRepository "cinema_digital_go/api/app/permissao/repository"
 	"cinema_digital_go/api/app/usuario/model"
 	"cinema_digital_go/api/app/usuario/repository"
@@ -246,5 +247,13 @@ func VisualizarUsuarioLogado(ginctx *gin.Context) {
 	}
 
 	userResponse := u.UsuarioToDTOResponse()
+
+	ingressos, err := ingressoRepository.NewIngressoRepository(dbConection.DB).ListaIngressosCompradosByUserId(usuarioLogado.Id)
+	if err != nil {
+		ginctx.JSON(http.StatusInternalServerError, middleware.NewResponseBridge(err, nil))
+	}
+
+	userResponse.Ingressos = ingressos
+
 	ginctx.JSON(http.StatusOK, middleware.NewResponseBridge(nil, userResponse))
 }

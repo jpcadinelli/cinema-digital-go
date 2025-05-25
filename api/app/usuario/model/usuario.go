@@ -2,6 +2,7 @@ package model
 
 import (
 	"cinema_digital_go/api/app/dropdown/model"
+	model3 "cinema_digital_go/api/app/ingresso/model"
 	model2 "cinema_digital_go/api/app/permissao/model"
 	"cinema_digital_go/api/pkg/global"
 	"fmt"
@@ -37,14 +38,15 @@ func (u *Usuario) TableName() string {
 }
 
 type UsuarioDTOResponse struct {
-	Id             uuid.UUID          `json:"id"`
-	PrimeiroNome   string             `json:"primeiroNome"`
-	UltimoNome     string             `json:"ultimoNome"`
-	CPF            string             `json:"cpf"`
-	Email          string             `json:"email"`
-	DataNascimento time.Time          `json:"dataNascimento"`
-	Permissoes     []model2.Permissao `json:"permissoes"`
-	CreatedAt      time.Time          `json:"createdAt"`
+	Id             uuid.UUID                 `json:"id"`
+	PrimeiroNome   string                    `json:"primeiroNome"`
+	UltimoNome     string                    `json:"ultimoNome"`
+	CPF            string                    `json:"cpf"`
+	Email          string                    `json:"email"`
+	DataNascimento time.Time                 `json:"dataNascimento"`
+	Permissoes     []model2.Permissao        `json:"permissoes"`
+	Ingressos      []model3.IngressoResponse `json:"ingressos,omitempty"`
+	CreatedAt      time.Time                 `json:"createdAt"`
 }
 
 func (u *Usuario) UsuarioToDTOResponse() *UsuarioDTOResponse {

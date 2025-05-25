@@ -1,6 +1,8 @@
 package model
 
 import (
+	modelFilme "cinema_digital_go/api/app/filme/model"
+	modelSala "cinema_digital_go/api/app/sala/model"
 	"cinema_digital_go/api/pkg/global"
 	"errors"
 	"github.com/google/uuid"
@@ -9,13 +11,16 @@ import (
 )
 
 type Sessao struct {
-	Id              uuid.UUID `json:"id"`
-	IdFilme         uuid.UUID `json:"idFilme"`
-	IdSala          uuid.UUID `json:"idSala"`
-	DataInicio      time.Time `json:"dataInicio"`
-	DataFim         time.Time `json:"dataFim"`
-	PrecoIngresso   float64   `json:"precoIngresso"`
-	Disponibilidade int       `json:"disponibilidade"`
+	Id                   uuid.UUID        `json:"id"`
+	IdFilme              uuid.UUID        `json:"idFilme"`
+	Filme                modelFilme.Filme `json:"filme" gorm:"foreignKey:IdFilme"`
+	IdSala               uuid.UUID        `json:"idSala"`
+	Sala                 modelSala.Sala   `json:"sala" gorm:"foreignKey:IdSala"`
+	DataInicio           time.Time        `json:"dataInicio"`
+	DataFim              time.Time        `json:"dataFim"`
+	PrecoIngresso        float64          `json:"precoIngresso"`
+	Disponibilidade      int              `json:"disponibilidade"`
+	PoltronasDisponiveis []string         `json:"poltronasDisponiveis" gorm:"-"`
 }
 
 func (s *Sessao) TableName() string {
