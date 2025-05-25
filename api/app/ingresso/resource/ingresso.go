@@ -7,6 +7,7 @@ import (
 	sessaoModel "cinema_digital_go/api/app/sessao/model"
 	dbConection "cinema_digital_go/api/pkg/database/conection"
 	"cinema_digital_go/api/pkg/middleware"
+	"cinema_digital_go/api/pkg/utils"
 	"fmt"
 	"net/http"
 	"strings"
@@ -22,6 +23,13 @@ func ComprarIngresso(ginctx *gin.Context) {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
 		return
 	}
+
+	usuarioLogado, err := utils.GetUsuarioLogado(ginctx)
+	if err != nil {
+		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(err, nil))
+		return
+	}
+	req.IdUsuario = usuarioLogado.Id
 
 	db := dbConection.DB
 	repo := repository.NewIngressoRepository(db)

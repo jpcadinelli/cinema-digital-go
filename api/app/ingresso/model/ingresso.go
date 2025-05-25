@@ -26,6 +26,6 @@ func (i *Ingresso) BeforeCreate(_ *gorm.DB) (err error) {
 
 type CompraIngressoRequest struct {
 	IdSessao  uuid.UUID `json:"idSessao" binding:"required"`
-	IdUsuario uuid.UUID `json:"idUsuario" binding:"required"`
+	IdUsuario uuid.UUID `json:"idUsuario"`
 	Poltronas []string  `json:"poltronas" binding:"required"`
 }
