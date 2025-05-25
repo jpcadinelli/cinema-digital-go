@@ -55,7 +55,7 @@ func ComprarIngresso(ginctx *gin.Context) {
 		ginctx.JSON(http.StatusBadRequest, middleware.NewResponseBridge(fmt.Errorf("fileiras inválidas"), nil))
 		return
 	}
-	poltronasPorFileira := sala.Poltronas / qtdFileiras
+	poltronasPorFileira := sala.Poltronas
 
 	validas := map[string]bool{}
 	for i := 0; i < qtdFileiras; i++ {
