@@ -30,7 +30,10 @@ func (r *sessaoRepositoryImpl) Create(sessao *model.Sessao) error {
 func (r *sessaoRepositoryImpl) FindById(id uuid.UUID) (*model.Sessao, error) {
 	var sessao model.Sessao
 
-	tx := r.db.First(&sessao, "id = ?", id)
+	tx := r.db.
+		Preload("Filme").
+		Preload("Sala").
+		First(&sessao, "id = ?", id)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
