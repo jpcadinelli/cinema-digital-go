@@ -11,4 +11,6 @@ func sessaoRoutes(r *gin.RouterGroup) {
 	r.GET(route, resource.Listar)
 	r.PUT(routeId, resource.Atualizar)
 	r.DELETE(routeId, resource.Deletar)
+
+	r.GET("em-cartaz", resource.EmCartaz)
 }
