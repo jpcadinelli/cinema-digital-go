@@ -39,7 +39,7 @@ func SetupRoutes(router *gin.Engine) *gin.Engine {
 		{
 			salaRoutes(salaGroup)
 		}
-		sessaoGroup := main.Group("/sessoes", middleware.Auth())
+		sessaoGroup := main.Group("/sessoes")
 		{
 			sessaoRoutes(sessaoGroup)
 		}
