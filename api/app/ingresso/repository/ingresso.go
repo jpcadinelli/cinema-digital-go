@@ -14,6 +14,7 @@ type IngressoRepository interface {
 	PoltronasOcupadas(idSessao uuid.UUID, poltronas []string) ([]model.Ingresso, error)
 	Create(ingressos []model.Ingresso) error
 	ListarPoltronasDisponiveis(sessao sessaoModel.Sessao, sala salaModel.Sala) ([]string, error)
+	ListaIngressosCompradosByUserId(idUsuario uuid.UUID) ([]model.IngressoResponse, error)
 }
 
 type ingressoRepositoryImpl struct {
@@ -66,4 +67,26 @@ func (r *ingressoRepositoryImpl) ListarPoltronasDisponiveis(sessao sessaoModel.S
 
 	sort.Strings(disponiveis)
 	return disponiveis, nil
+}
+
+func (r *ingressoRepositoryImpl) ListaIngressosCompradosByUserId(idUsuario uuid.UUID) ([]model.IngressoResponse, error) {
+	var ingressos []model.Ingresso
+	tx := r.db.
+		Model(&model.Ingresso{}).
+		Where("id_usuario = ?", idUsuario).
+		Preload("Sessao").
+		Preload("Sessao.Filme").
+		Preload("Sessao.Sala").
+		Order("comprado_em DESC").
+		Find(&ingressos)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	var ingressosResponse []model.IngressoResponse
+	for _, ingresso := range ingressos {
+		ingressosResponse = append(ingressosResponse, ingresso.ToResponse())
+	}
+
+	return ingressosResponse, nil
 }
