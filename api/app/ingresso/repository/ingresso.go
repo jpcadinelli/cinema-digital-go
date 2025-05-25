@@ -40,7 +40,7 @@ func (r *ingressoRepositoryImpl) ListarPoltronasDisponiveis(sessao sessaoModel.S
 	if qtdFileiras <= 0 {
 		return nil, fmt.Errorf("fileiras inválidas")
 	}
-	poltronasPorFileira := sala.Poltronas / qtdFileiras
+	poltronasPorFileira := sala.Poltronas
 
 	validas := map[string]bool{}
 	for i := 0; i < qtdFileiras; i++ {
