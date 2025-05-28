@@ -21,6 +21,7 @@ type Filme struct {
 	Atualizado        time.Time         `json:"atualizado"`
 	Excluido          *gorm.DeletedAt   `json:"excluido"`
 	IdUsuarioRegistro uuid.UUID         `json:"idUsuarioRegistro"`
+	CaminhoPoster     string            `json:"-"`
 	Generos           []modelGen.Genero `json:"generos" gorm:"many2many:re_filme_genero;foreignKey:id;References:id;re_filme_genero;joinForeignKey:id_filme;joinReferences:id_genero"`
 }
 
