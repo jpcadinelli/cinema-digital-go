@@ -18,6 +18,7 @@ type Sessao struct {
 	Sala                 modelSala.Sala   `json:"sala" gorm:"foreignKey:IdSala"`
 	DataInicio           time.Time        `json:"dataInicio"`
 	DataFim              time.Time        `json:"dataFim"`
+	Data                 string           `json:"data" gorm:"-"`
 	PrecoIngresso        float64          `json:"precoIngresso"`
 	Disponibilidade      int              `json:"disponibilidade"`
 	PoltronasDisponiveis []string         `json:"poltronasDisponiveis" gorm:"-"`
@@ -52,4 +53,8 @@ func (s *Sessao) Validar() error {
 		return errors.New("disponibilidade is required")
 	}
 	return nil
+}
+
+func (s *Sessao) ToResponse() {
+	s.Data = s.DataInicio.Format("02/01/2006 15:04")
 }

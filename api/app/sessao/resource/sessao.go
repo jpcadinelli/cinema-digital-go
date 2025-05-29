@@ -41,6 +41,7 @@ func Criar(ginctx *gin.Context) {
 		return
 	}
 
+	s.ToResponse()
 	ginctx.JSON(http.StatusCreated, middleware.NewResponseBridge(nil, s))
 }
 
