@@ -91,6 +91,7 @@ func (r *sessaoRepositoryImpl) GetEmCartaz() ([]model.Sessao, error) {
 	var sessoes []model.Sessao
 
 	tx := r.db.
+		Order("data_inicio ASC").
 		Preload("Filme").
 		Preload("Sala").
 		Where("disponibilidade = ?", enum.SessaoDisponivel).
