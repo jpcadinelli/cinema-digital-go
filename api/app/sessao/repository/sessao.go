@@ -47,6 +47,7 @@ func (r *sessaoRepositoryImpl) FindById(id uuid.UUID) (*model.Sessao, error) {
 	var err error
 	sessao.PoltronasDisponiveis, err = repository.NewIngressoRepository(r.db).ListarPoltronasDisponiveis(sessao, sessao.Sala)
 
+	sessao.ToResponse()
 	return &sessao, err
 }
 
@@ -68,6 +69,10 @@ func (r *sessaoRepositoryImpl) FindAll(preloads ...string) ([]model.Sessao, erro
 		return sessoes, erros.ErrSessaoNaoEncontrada
 	}
 
+	for i, _ := range sessoes {
+		sessoes[i].ToResponse()
+	}
+
 	return sessoes, nil
 }
 
@@ -80,6 +85,7 @@ func (r *sessaoRepositoryImpl) Update(sessao *model.Sessao, updateItems map[stri
 		return nil, erros.ErrSessaoNaoEncontrada
 	}
 
+	sessao.ToResponse()
 	return sessao, nil
 }
 
@@ -101,6 +107,10 @@ func (r *sessaoRepositoryImpl) GetEmCartaz() ([]model.Sessao, error) {
 	}
 	if tx.RowsAffected == 0 {
 		return sessoes, erros.ErrSessaoNaoEncontrada
+	}
+
+	for i, _ := range sessoes {
+		sessoes[i].ToResponse()
 	}
 
 	return sessoes, nil
