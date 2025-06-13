@@ -36,10 +36,18 @@ var (
 		PermissaoSalaDropdown,
 		PermissaoSalaAtualizar,
 		PermissaoSalaDeletar,
+
+		PermissaoSessaoCriar,
+		PermissaoSessaoVisualizar,
+		PermissaoSessaoListar,
+		PermissaoSessaoDropdown,
+		PermissaoSessaoAtualizar,
+		PermissaoSessaoDeletar,
 	}
 	GrupoN1Permissoes = []string{
 		PermissaoUsuarioVisualizar,
 		PermissaoUsuarioAtualizar,
+		PermissaoSessaoVisualizar,
 	}
 )
 
