@@ -52,7 +52,7 @@ func Visualizar(ginctx *gin.Context) {
 		return
 	}
 
-	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSessaoAtualizar) {
+	if !utils.VerificaPermissaoUsuario(*usuarioLogado, enum.PermissaoSessaoVisualizar) {
 		ginctx.JSON(http.StatusUnauthorized, middleware.NewResponseBridge(erros.ErrUsuarioNaoTemPermissao, nil))
 		return
 	}
